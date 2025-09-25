@@ -17,12 +17,12 @@ const geistMono = Geist_Mono({
 
 const googleJost = Jost({
   variable: "--font-Jost",
-  weight: ["100","200","300","400", "500","600","700","800","900",], 
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 const googleLato = Lato({
   variable: "--font-Lato",
-  weight: ["100","300","400","700","900",], 
+  weight: ["100", "300", "400", "700", "900"],
 });
 
 export const metadata = {
@@ -34,14 +34,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${googleJost.variable} ${googleLato.variable} antialiased`}>
-          <TopNavbar />
-          <NavbarMiddle />
-          <Navbar />
-          <main>
-            {children}
-          </main>
-          <Footer />
+        className={`${geistSans.variable} ${geistMono.variable} ${googleJost.variable} ${googleLato.variable} antialiased`}
+      >
+        {children}
       </body>
     </html>
   );
