@@ -21,7 +21,6 @@ export const metadata = {
   description: "Manage products, orders, and customers from one place",
 };
 
-// ✅ Sidebar links with submenus (including Subcategories & Coupons)
 const sidebarLinks = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   {
@@ -36,7 +35,7 @@ const sidebarLinks = [
     label: "Categories",
     icon: Tag,
     children: [
-      { href: "/admin/categories", label: "All Categories" },
+      { href: "/admin/categories/all", label: "All Categories" },
       { href: "/admin/categories/add", label: "Add Category" },
     ],
   },
@@ -44,7 +43,7 @@ const sidebarLinks = [
     label: "Subcategories",
     icon: Layers,
     children: [
-      { href: "/admin/subcategories", label: "All Subcategories" },
+      { href: "/admin/subcategories/all", label: "All Subcategories" },
       { href: "/admin/subcategories/add", label: "Add Subcategory" },
     ],
   },

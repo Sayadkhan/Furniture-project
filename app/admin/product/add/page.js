@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -10,6 +10,11 @@ import { Loader2, X } from "lucide-react";
 export default function AddProductPage() {
   const [loading, setLoading] = useState(false);
   const [mainImages, setMainImages] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+
   const [variants, setVariants] = useState([
     {
       attributes: { color: "", hexCode: "", size: "", material: "" },
@@ -19,7 +24,41 @@ export default function AddProductPage() {
     },
   ]);
 
-  // 🔹 Handle main product images
+  // 🔹 Load categories
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/category");
+        const data = await res.json();
+        if (res.ok) {
+          setCategories(data.category || []);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchSubcategories = async () => {
+      if (!selectedCategory) return;
+      try {
+        const res = await fetch(
+          `/api/subcategory?category=${selectedCategory}`
+        );
+        const data = await res.json();
+        console.log(data);
+        if (res.ok) {
+          setSubcategories(data.data || []);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSubcategories();
+  }, [selectedCategory]);
+
   const handleMainImageChange = (e) => {
     const files = Array.from(e.target.files);
     setMainImages((prev) => [...prev, ...files]);
@@ -29,7 +68,6 @@ export default function AddProductPage() {
     setMainImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // 🔹 Handle variant fields
   const handleVariantChange = (index, field, value) => {
     const updated = [...variants];
     updated[index][field] = value;
@@ -42,7 +80,6 @@ export default function AddProductPage() {
     setVariants(updated);
   };
 
-  // 🔹 Handle variant images
   const handleVariantImageChange = (index, e) => {
     const files = Array.from(e.target.files);
     const updated = [...variants];
@@ -58,7 +95,6 @@ export default function AddProductPage() {
     setVariants(updated);
   };
 
-  // 🔹 Add/remove variant
   const addVariant = () => {
     setVariants([
       ...variants,
@@ -82,17 +118,21 @@ export default function AddProductPage() {
 
     const formData = new FormData(e.target);
 
+    // 👉 Append category & subcategory
+    formData.append("category", selectedCategory);
+    formData.append("subcategory", selectedSubcategory);
+
     // 👉 Append main product images
     mainImages.forEach((file) => {
       formData.append("images", file);
     });
 
-    // 👉 Build variants JSON (without images, they are appended separately)
+    // 👉 Build variants JSON (without images, images uploaded separately)
     const variantsData = variants.map((variant) => ({
       attributes: variant.attributes,
       stock: Number(variant.stock),
       price: Number(variant.price),
-      images: [], // will be filled backend after Cloudinary upload
+      images: [],
     }));
 
     formData.append("variants", JSON.stringify(variantsData));
@@ -124,6 +164,8 @@ export default function AddProductPage() {
             price: "",
           },
         ]);
+        setSelectedCategory("");
+        setSelectedSubcategory("");
       } else {
         toast.error("❌ Failed to add product: " + data.message);
       }
@@ -147,7 +189,6 @@ export default function AddProductPage() {
               <Input name="name" placeholder="Product Name" required />
               <Input name="slug" placeholder="Slug (unique URL)" required />
               <Input name="shortDesc" placeholder="Short Description" />
-              <Input name="category" placeholder="Category" required />
             </div>
 
             {/* 🔹 Full Description */}
@@ -157,19 +198,53 @@ export default function AddProductPage() {
               className="h-28"
             />
 
+            {/* 🔹 Category & Subcategory */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <select
+                value={selectedCategory}
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
+                  setSelectedSubcategory("");
+                }}
+                className="border rounded-lg p-2"
+                required
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={selectedSubcategory}
+                onChange={(e) => setSelectedSubcategory(e.target.value)}
+                className="border rounded-lg p-2"
+                required
+              >
+                <option value="">Select SubCategory</option>
+                {subcategories.map((sub) => (
+                  <option key={sub._id} value={sub._id}>
+                    {sub.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* 🔹 Pricing & Stock */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Input
                 name="price"
                 type="number"
-                placeholder="Price"
+                placeholder="Base Price"
                 min="0"
                 required
               />
               <Input
                 name="stock"
                 type="number"
-                placeholder="Stock"
+                placeholder="Base Stock"
                 min="0"
                 required
               />

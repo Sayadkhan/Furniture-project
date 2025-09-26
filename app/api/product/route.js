@@ -78,11 +78,13 @@ export async function POST(req) {
       slug: formData.get("slug"),
       shortDesc: formData.get("shortDesc"),
       desc: formData.get("desc"),
+
       price: Number(formData.get("price")),
       stock: Number(formData.get("stock")),
       discount: Number(formData.get("discount") || 0),
       discountType: formData.get("discountType") || "percentage",
       category: formData.get("category"),
+      subcategory: formData.get("subcategory"),
       tags: formData.get("tags") ? formData.get("tags").split(",") : [],
       images: imageUrls,
       variants,

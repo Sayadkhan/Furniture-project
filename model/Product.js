@@ -15,6 +15,7 @@ const ProductSchema = new mongoose.Schema(
       default: "percentage",
     },
     category: { type: String, required: true },
+    subcategory: { type: String },
     tags: [{ type: String }],
 
     images: [{ type: String }],
