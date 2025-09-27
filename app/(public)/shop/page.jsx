@@ -16,9 +16,7 @@ async function getProducts() {
   return JSON.parse(JSON.stringify(products));
 }
 
-//  .populate("category", "name")
-//       .populate("subcategory", "name")
-//       .sort({ createdAt: -1 });
+
 
 
 const page = async () => {
