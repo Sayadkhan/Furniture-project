@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import ProductFeatuImg from "../../public/hero-2.jpg";
+import Link from "next/link";
 
 const ProductDetails = () => {
   const [numberCount, setNumberCount] = useState(1);
@@ -150,9 +151,9 @@ const ProductDetails = () => {
             <button className="flex-1 bg-gray-700 text-white py-2 rounded hover:bg-gray-800">
               View Cart
             </button>
-            <button className="flex-1 bg-black text-white py-2 rounded hover:bg-gray-800">
+            <Link href="/checkout" className="flex-1 bg-black text-white py-2 rounded hover:bg-gray-800 text-center">
               Checkout
-            </button>
+            </Link>
           </div>
         </div>
       </div>

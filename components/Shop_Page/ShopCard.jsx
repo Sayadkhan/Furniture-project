@@ -2,6 +2,7 @@ import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const ShopCard = ({product}) => {
   return (
@@ -9,7 +10,7 @@ const ShopCard = ({product}) => {
         <Card key={product._id} className="shadow-md rounded-lg">
             <CardHeader>
                 <CardTitle>{product.name}</CardTitle>
-            </CardHeader>
+            </CardHeader>              
             <CardContent>
                 <p className="text-lg font-semibold mt-2">${product.price}</p>
                 <p className="text-sm text-gray-600 mt-1">
