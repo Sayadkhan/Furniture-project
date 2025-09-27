@@ -3,10 +3,22 @@ import { connectDB } from "@/lib/mongodb";
 import Product from "@/model/Product";
 import { NextResponse } from "next/server";
 
+import Category from "@/model/Category";
+import SubCategory from "@/model/SubCategory";
+
+// import { NextResponse } from "next/server";
+// import connectDB from "@/lib/db";
+// import Product from "@/models/Product";
+
 export async function GET() {
   try {
     await connectDB();
-    const products = await Product.find().sort({ createdAt: -1 });
+
+    const products = await Product.find()
+      .populate("category", "name")
+      .populate("subcategory", "name")
+      .sort({ createdAt: -1 });
+
     return NextResponse.json({ success: true, products });
   } catch (err) {
     return NextResponse.json(
@@ -20,6 +32,8 @@ export async function POST(req) {
   try {
     await connectDB();
     const formData = await req.formData();
+
+    console.log(formData);
 
     // 🔹 Upload main product images
     const files = formData.getAll("images");

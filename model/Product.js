@@ -6,19 +6,32 @@ const ProductSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true, lowercase: true },
     shortDesc: { type: String },
     desc: { type: String },
+
     price: { type: Number, required: true },
     stock: { type: Number, required: true, default: 0 },
+
     discount: { type: Number, default: 0 },
     discountType: {
       type: String,
       enum: ["percentage", "flat"],
       default: "percentage",
     },
-    category: { type: String, required: true },
-    subcategory: { type: String },
+
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+
+    subcategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SubCategory", // ✅ correct
+    },
+
     tags: [{ type: String }],
 
     images: [{ type: String }],
+
     variants: [
       {
         attributes: {

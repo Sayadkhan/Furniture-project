@@ -11,5 +11,6 @@ const CategorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// ✅ Prevent model overwrite in Next.js hot reload
 export default mongoose.models.Category ||
   mongoose.model("Category", CategorySchema);
