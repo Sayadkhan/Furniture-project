@@ -16,7 +16,7 @@ const NavbarMiddle = () => {
               </div>
     
           
-              <div className="text-2xl font-bold tracking-wide">FURNISTA.</div>
+              <div className="text-2xl font-bold tracking-wide cursor-pointer">United furniture UAE</div>
     
               {/* Right: User, Wishlist, Cart */}
               <div className="flex items-center gap-6 text-sm">
