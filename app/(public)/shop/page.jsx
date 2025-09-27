@@ -1,10 +1,32 @@
-import ShopMain from '@/components/Shop_Page/ShopMain'
-import React from 'react'
+import ShopClient from '@/components/Shop_Page/ShopClient'
+import { connectDB } from '@/lib/mongodb';
+import Product from '@/model/Product';
+import Category from '@/model/Category';
+import SubCategory from '@/model/SubCategory';
 
-const page = () => {
+
+// import ShopClient from "./ShopClient";
+
+async function getProducts() {
+  await connectDB();
+  const products = await Product.find({})
+    .populate("category","name")
+    .populate("subcategory", "name")
+    .lean();
+  return JSON.parse(JSON.stringify(products));
+}
+
+//  .populate("category", "name")
+//       .populate("subcategory", "name")
+//       .sort({ createdAt: -1 });
+
+
+const page = async () => {
+  const products = await getProducts();
+  console.log(products)
   return (
     <>
-    <ShopMain />
+    <ShopClient products={products}/>
     </>
   )
 }
