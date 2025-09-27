@@ -1,4 +1,5 @@
 "use client"
+import Link from 'next/link';
 import React from 'react'
 import { FaFacebookF, FaXTwitter, FaInstagram, FaPinterestP, FaUser, FaHeart, FaShoppingCart, } from 'react-icons/fa6';
 import { PiShoppingCart } from "react-icons/pi";
@@ -16,7 +17,9 @@ const NavbarMiddle = () => {
               </div>
     
           
-              <div className="text-2xl font-bold tracking-wide cursor-pointer">United furniture UAE</div>
+              <div className="text-2xl font-bold tracking-wide cursor-pointer">
+                <Link href="/">United furniture UAE</Link>                
+              </div>
     
               {/* Right: User, Wishlist, Cart */}
               <div className="flex items-center gap-6 text-sm">

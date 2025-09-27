@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import ShopCard from "./ShopCard";
 
 export default function ShopClient({ products }) {
   const [selectedColors, setSelectedColors] = useState([]);
@@ -92,7 +93,7 @@ export default function ShopClient({ products }) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 flex gap-6">
+    <div className="container mx-auto min-h-screen px-4 py-8 flex gap-6">
       {/* Sidebar */}
       <aside className="w-64 border rounded-lg p-4 h-fit sticky top-20">
         <h2 className="text-xl font-bold mb-4">Filters</h2>
@@ -174,59 +175,7 @@ export default function ShopClient({ products }) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <Card key={product._id} className="shadow-md rounded-lg">
-                <CardHeader>
-                  <CardTitle>{product.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-lg font-semibold mt-2">${product.price}</p>
-                  <p className="text-sm text-gray-600 mt-1">
-                    {product.category?.name} → {product.subcategory?.name}
-                  </p>
-
-                  {/* Colors */}
-                  <div className="mt-3">
-                    <p className="text-sm font-medium">Colors:</p>
-                    <div className="flex gap-2 mt-1">
-                      {product.variants?.map(
-                        (variant, i) =>
-                          variant.attributes?.color && (
-                            <span
-                              key={i}
-                              className="w-6 h-6 rounded-full border"
-                              style={{
-                                backgroundColor:
-                                  variant.attributes.hexCode || "#ccc",
-                              }}
-                              title={variant.attributes.color}
-                            ></span>
-                          )
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Sizes */}
-                  <div className="mt-3">
-                    <p className="text-sm font-medium">Sizes:</p>
-                    <div className="flex gap-2 mt-1">
-                      {[...new Set(
-                        product.variants
-                          ?.map((v) => v.attributes?.size)
-                          .filter(Boolean)
-                      )].map((size, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-1 border rounded text-xs"
-                        >
-                          {size}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <Button className="mt-4 w-full">View Details</Button>
-                </CardContent>
-              </Card>
+              <ShopCard key={product._id} product={product} />
             ))}
           </div>
         )}
