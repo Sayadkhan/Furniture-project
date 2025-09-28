@@ -1,10 +1,17 @@
 "use client"
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react'
 import { FaFacebookF, FaXTwitter, FaInstagram, FaPinterestP, FaUser, FaHeart, FaShoppingCart, } from 'react-icons/fa6';
 import { PiShoppingCart } from "react-icons/pi";
+import CartModal from './Add_To_Cart/CartModal';
 
 const NavbarMiddle = () => {
+
+  const [openCart, setOpenCart] = useState(false)
+
+  const openCartModal = () => {
+    setOpenCart(!openCart)
+  }
   return (
     <div className="bg-[#000] text-white py-4 px-6">
           <div className="container">
@@ -35,16 +42,20 @@ const NavbarMiddle = () => {
                 </div>
     
                 {/* Cart */}
-                <div className="relative flex items-center gap-1 hover:text-gray-400 cursor-pointer">
-                  <PiShoppingCart className="text-lg"/>             
-                  <span className="text-xs absolute -top-2 -right-2 bg-white text-black rounded-full px-[5px] py-[1px] text-[10px]">
-                    0
-                  </span>
-                  <span className="ml-1">$0.00</span>
-                </div>
+              <button onClick={openCartModal}>
+                    <div className="relative flex items-center gap-1 hover:text-gray-400 cursor-pointer">
+                    <PiShoppingCart className="text-lg"/>             
+                    <span className="text-xs absolute -top-2 -right-2 bg-white text-black rounded-full px-[5px] py-[1px] text-[10px]">
+                      0
+                    </span>
+                    <span className="ml-1">$0.00</span>
+                  </div>
+              </button>
               </div>
             </div>
           </div>
+
+          <CartModal openCart={openCart} setOpenCart={setOpenCart}/>
         </div>
   )
 }
