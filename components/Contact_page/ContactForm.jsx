@@ -3,7 +3,7 @@
 const ContactForm = () => {  
   return (
     <div>
-        <div className="container mx-auto px-6 py-12">
+        <div className="container mx-auto lg:px-6 py-12">
             <h2 className="text-[30px] font-semibold text-brown-600 mb-6">
                 Contact Form
             </h2>
@@ -15,7 +15,7 @@ const ContactForm = () => {
                 </div>         
                 <textarea name="message" placeholder="Comment" rows={6} className="w-full border p-3 focus:outline-none focus:ring-2 focus:ring-brown-600"></textarea>          
                 <div className="flex justify-center">
-                <button type="submit" className="bg-brown-600 text-white text-[20px] px-[150px] py-3 rounded-md font-medium hover:bg-brown-700 transition bg-[#000]"> Send </button>
+                <button type="submit" className="bg-brown-600 text-white text-[20px] px-[50px] lg:px-[150px] py-3 rounded-md font-medium hover:bg-brown-700 transition bg-[#000]"> Send </button>
                 </div>
             </form>
         </div>

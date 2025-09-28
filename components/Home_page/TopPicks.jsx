@@ -57,7 +57,7 @@ const featuredData = [
 
 const TopPicks = () => {
   return (
-    <div className='pb-[100px]'>
+    <div className='pb-[50px] lg:pb-[100px]'>
         <div className="container">
             <h3 className='text-[35px] font-semibold text-black mb-5'>Top Picks</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">

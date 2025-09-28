@@ -93,9 +93,9 @@ export default function ShopClient({ products }) {
   };
 
   return (
-    <div className="container mx-auto min-h-screen px-4 py-8 flex gap-6">
+    <div className="container mx-auto min-h-screen px-4 py-8 block md:flex gap-6">
       {/* Sidebar */}
-      <aside className="w-64 border rounded-lg p-4 h-fit sticky top-20">
+      <aside className="md:w-64 border rounded-lg p-4 h-fit md:sticky top-20 mb-8 md:mb-0">
         <h2 className="text-xl font-bold mb-4">Filters</h2>
 
         {/* Categories */}
@@ -173,7 +173,7 @@ export default function ShopClient({ products }) {
         {filteredProducts.length === 0 ? (
           <p>No products found.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
               <ShopCard key={product._id} product={product} />
             ))}

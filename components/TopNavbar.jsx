@@ -29,18 +29,18 @@ const TopNavbar = () => {
                 </div>
         
                 <div className="lg:flex hidden items-center gap-6 jost_font text-[14px]">
-                    <Link href="" className="hover:underline ">
-                    About Us
+                    <Link href="/" className="hover:underline ">
+                    Home
                     </Link>
-                    <a href="" className="hover:underline">
-                    Blog
-                    </a>
-                    <a href="" className="hover:underline">
-                    Contact Us
-                    </a>
-                    <a href="" className="hover:underline">
-                    FAQs
-                    </a>
+                    <Link href="/shop" className="hover:underline">
+                    Shop
+                    </Link>
+                    <Link href="/aboutus" className="hover:underline">
+                    About
+                    </Link>
+                    <Link href="/contactus" className="hover:underline">
+                    Contact
+                    </Link>
                 </div>
             </div>
         </div>
