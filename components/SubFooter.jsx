@@ -6,9 +6,9 @@ const SubFooter = () => {
   return (
     <div>
         <div className="pt-10">
-            <div className="flex justify-between">
+            <div className="block lg:flex justify-between">
                 <p className='text-white'>© 2025 Furnista_Default - WordPress Theme by Avanam</p>
-                <div className="">
+                <div className="mt-3">
                     <Image src={PaymentImg} alt='' />
                 </div>
             </div>

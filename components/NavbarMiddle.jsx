@@ -13,10 +13,10 @@ const NavbarMiddle = () => {
     setOpenCart(!openCart)
   }
   return (
-    <div className="bg-[#000] text-white py-4 px-6">
+    <div className="bg-[#000] text-white py-4 px-0 lg:px-6">
           <div className="container">
             <div className=" flex items-center justify-between">        
-              <div className="flex gap-4 text-lg">
+              <div className="md:flex hidden gap-4 text-lg">
                 <FaFacebookF className="hover:text-gray-400 cursor-pointer" />
                 <FaXTwitter className="hover:text-gray-400 cursor-pointer" />
                 <FaInstagram className="hover:text-gray-400 cursor-pointer" />
@@ -24,12 +24,12 @@ const NavbarMiddle = () => {
               </div>
     
           
-              <div className="text-2xl font-bold tracking-wide cursor-pointer">
+              <div className="text-lg md:text-2xl font-bold tracking-wide cursor-pointer">
                 <Link href="/">United furniture UAE</Link>                
               </div>
     
               {/* Right: User, Wishlist, Cart */}
-              <div className="flex items-center gap-6 text-sm">
+              <div className="flex items-center gap-3 md:gap-6 text-sm">
                 {/* User */}
                 <FaUser className="text-lg hover:text-gray-400 cursor-pointer" />
     

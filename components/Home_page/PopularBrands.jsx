@@ -75,7 +75,7 @@ const PopularBrands = () => {
             <div className="">
                 <h3 className='text-[35px] font-semibold text-black mb-5'>Popular Brands</h3>
             </div>
-            <div className="grid grid-cols-5 gap-[20px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-[20px]">
                 {LatestProductData.map((Item, index)=>(
                     <div key={index} className="p-[10px] shadow rounded-xl group">
                         <div className="w-full h-[200px] overflow-hidden rounded-lg">

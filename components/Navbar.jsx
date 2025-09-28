@@ -14,11 +14,11 @@ import Link from 'next/link'
 
 const Navbar = () => {
   return (
-    <div className="bg-[#000] text-white py-4 px-6">
+    <div className="bg-[#000] text-white py-4 px-0 lg:px-6">
       <div className="container">
         <div className="bg-gray-100 px-3 py-3 flex items-center justify-between text-sm">
           {/* ----------------------Navigation-Menu---------- */}
-          <NavigationMenu>
+          <NavigationMenu className="hidden lg:block">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="flex items-center gap-2 text-gray-700">
@@ -58,14 +58,14 @@ const Navbar = () => {
             </NavigationMenuList>
           </NavigationMenu>
           {/* -------middle-menu--------- */}
-          <div className="text-black flex gap-[35px]">
+          <div className="text-black hidden xl:flex gap-[35px]">
             <Link className='text-[18px] font-medium' href="/">Home</Link>
             <Link className='text-[18px] font-medium' href="/shop">Shop</Link>
             <Link className='text-[18px] font-medium' href="">About</Link>
             <Link className='text-[18px] font-medium' href="">Contact</Link>
           </div>
           {/* -------------search-bar-------- */}
-          <div className="border border-[#e4e4e4] rounded-md p-3 flex items-center w-full max-w-[350px]">
+          <div className="border border-[#e4e4e4] rounded-md p-3 flex items-center w-full max-w-full lg:max-w-[450px] xl:max-w-[350px]">
             <input
               type="text"
               placeholder="Search products..."

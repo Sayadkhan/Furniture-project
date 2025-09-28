@@ -54,22 +54,22 @@ const Hero = () => {
           mousewheel={true}
           keyboard={true}
           modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-          className="mySwiper h-[600px]"
+          className="mySwiper h-[500px] md:h-[450px] xl:h-[600px]"
         >
           {slidesData.map((slide) => (
             <SwiperSlide
               key={slide.id}
-              className="bg-[#edeae5] px-[100px] rounded-2xl"
+              className="bg-[#edeae5]  py-[10px] px-[20px] md:px-[60px] lg:px-[100px] rounded-2xl"
             >
-              <div className="flex items-center justify-between h-full">
-                <div className="w-[40%]">
+              <div className="block md:flex items-center justify-between h-full">
+                <div className="w-full md:w-[50%] lg:w-[45%] xl:w-[40%] md:text-left text-center">
                   <span className="jost_font text-[17px] font-medium">
                     {slide.subtitle}
                   </span>
-                  <h2 className="jost_font text-[44px] font-semibold mt-3 leading-[50px]">
+                  <h2 className="jost_font text-[24px] md:text-[30px] xl:text-[44px] font-semibold mt-3 leading-[30px] md:leading-[40px] xl:leading-[50px]">
                     {slide.title}
                   </h2>
-                  <p className="jost_font text-[17px] font-normal mt-5">
+                  <p className="jost_font text-[17px] font-normal mt-2 lg:mt-5">
                     {slide.description}
                   </p>
                   <Link
@@ -79,8 +79,8 @@ const Hero = () => {
                     Shop Now
                   </Link>
                 </div>
-                <div className="w-[47%]">
-                  <Image src={slide.image} alt={slide.title} />
+                <div className="w-full md:w-[47%] h-[180px] md:h-auto mt-5  md:mt-0">
+                  <Image className='h-full object-cover ' src={slide.image} alt={slide.title} />
                 </div>
               </div>
             </SwiperSlide>

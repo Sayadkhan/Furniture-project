@@ -53,10 +53,10 @@ const categoryIconData = [
 
 const CategoryIcons = () => {
   return (
-    <div className='py-[60px]'>
+    <div className='py-[20px] xl:py-[60px]'>
         <div className="container">
-            <div className="w-[80%] m-auto">
-                <div className="grid grid-cols-9 gap-[30px]">
+            <div className="w-full xl:w-[80%] m-auto">
+                <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-9 gap-[30px]">
                     {categoryIconData.map((item,index)=>(
                         <div key={index} className="flex justify-center items-center">
                             <Link href="">

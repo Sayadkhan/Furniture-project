@@ -8,8 +8,8 @@ const TopNavbar = () => {
   return (
     <div className="bg-black text-white py-3 px-4 jost_font border-b border-[#333]">
         <div className="container">
-            <div className=" flex justify-between items-center">   
-                <div className="flex items-center gap-6">
+            <div className="block md:flex justify-between items-center">   
+                <div className="md:flex hidden items-center justify-center gap-6">
                     <div className="flex items-center gap-1">
                     <span className='text-white'><IoCallOutline /></span>
                         <Link className='cursor-pointer jost_font' href="" >(+91) 123-456-789</Link>                        
@@ -21,14 +21,14 @@ const TopNavbar = () => {
                     </div>
                 </div>
         
-                <div className="text-white jost font-medium jost_font">
+                <div className="text-white jost font-medium jost_font text-center lg:mt-0 mt-1">
                     Summer Sale 15% off!{' '}
                     <Link href="" className="underline hover:text-red-500 jost_font">
                     Shop Now!
                     </Link>
                 </div>
         
-                <div className="flex items-center gap-6 jost_font text-[14px]">
+                <div className="lg:flex hidden items-center gap-6 jost_font text-[14px]">
                     <Link href="" className="hover:underline ">
                     About Us
                     </Link>

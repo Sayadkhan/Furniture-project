@@ -92,7 +92,15 @@ const LatestProducts = () => {
             <div className="">
                 <h3 className='text-[35px] font-semibold text-black mb-5'>Latest products</h3>
             </div>
-            <Swiper slidesPerView={4} spaceBetween={25} centeredSlides={true} pagination={{ clickable: true, }}
+            <Swiper slidesPerView={4} spaceBetween={25} centeredSlides={true}
+             pagination={{ clickable: true, }}
+             breakpoints={{
+                    320: { slidesPerView: 1 },  
+                    480: { slidesPerView: 2 },  
+                    768: { slidesPerView: 3 },  
+                    1024: { slidesPerView: 4 },  
+                    1280: { slidesPerView: 5 },  
+                }}
               className="mySwiper">
                 {LatestProductData.map((item, index)=>(
                     <SwiperSlide>
