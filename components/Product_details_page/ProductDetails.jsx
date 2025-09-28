@@ -179,7 +179,7 @@ const ProductDetails = ({ product, userId }) => {
           </div>
 
           <div className="mt-5">
-            <ProductsTabs />
+            <ProductsTabs product={product} />
           </div>
         </div>
       </div>

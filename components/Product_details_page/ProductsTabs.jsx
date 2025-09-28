@@ -24,7 +24,7 @@ const tabs = [
 },
 ];
 
-const ProductsTabs = () => {
+const ProductsTabs = ({product}) => {
 
      const [active, setActive] = useState("description");
 
@@ -53,13 +53,7 @@ const ProductsTabs = () => {
                     <div className="p-4">
                         {active === "description" && (
                             <div className="">
-                                <Image src={TabsImg} alt="Room interior" className="w-full h-[500px] object-cover rounded-xl"/>
-                                <p className="text-[18px] w-[80%] leading-[25px] mt-5">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Unde minus esse dolores eligendi eius cupiditate voluptatem rem,
-                                 molestiae explicabo quia, ex, fuga iure. Quod obcaecati maxime, placeat odio dignissimos consectetur!, Lorem ipsum dolor sit, amet consectetur adipisicing elit. Unde minus esse dolores eligendi eius cupiditate voluptatem rem, 
-                                 molestiae explicabo quia, ex, fuga iure. Quod obcaecati maxime, placeat odio dignissimos consectetur!</p>
-                                 <p className="text-[18px] w-[80%] leading-[25px] mt-5">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Unde minus esse dolores eligendi eius cupiditate voluptatem rem,
-                                 molestiae explicabo quia, ex, fuga iure. Quod obcaecati maxime, placeat odio dignissimos consectetur!, Lorem ipsum dolor sit, amet consectetur adipisicing elit. Unde minus esse dolores eligendi eius cupiditate voluptatem rem, 
-                                 molestiae explicabo quia, ex, fuga iure. Quod obcaecati maxime, placeat odio dignissimos consectetur!</p>
+                              {product.desc}
                             </div>
                         )}                       
                         {active === "reviews" && ( <p className="text-gray-700">1 customer review goes here.</p>)}
