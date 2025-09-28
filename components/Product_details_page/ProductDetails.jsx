@@ -1,18 +1,21 @@
 "use client";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+
 import {
   Star, Eye, Truck, RefreshCcw,
-  Heart, Share2, HelpCircle, BarChart, X
+  Heart, Share2, HelpCircle, BarChart
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProductsTabs from "./ProductsTabs";
+import { toast } from "react-toastify";
+import { addToCart } from "@/redux/slice/CartSlice";
 
-const ProductDetails = ({ product }) => {
+const ProductDetails = ({ product, userId }) => {
+  const dispatch = useDispatch();
+
   const [numberCount, setNumberCount] = useState(1);
-  const [openCart, setOpenCart] = useState(false);
-
-  // Track selected variant
   const [selectedVariant, setSelectedVariant] = useState(null);
 
   // fallback to base product or variant values
@@ -32,6 +35,31 @@ const ProductDetails = ({ product }) => {
   const handleVariantSelect = (variant) => {
     setSelectedVariant(variant);
     setNumberCount(1);
+  };
+
+  // ✅ Add To Cart Logic
+  const handleAddToCart = () => {
+    if (activeStock < 1) {
+      toast.error("❌ This item is out of stock");
+      return;
+    }
+
+    dispatch(
+      addToCart({
+        userId: userId || "guest",
+        productId: product._id,
+        name: product.name,
+        price: discountedPrice,
+        quantity: numberCount,
+        variant: selectedVariant,
+        image: activeImage,
+      })
+    );
+
+    toast.success(
+      `✅ Added ${numberCount} x ${selectedVariant?.attributes?.color || product.name
+      } to cart`
+    );
   };
 
   return (
@@ -85,21 +113,22 @@ const ProductDetails = ({ product }) => {
               {product.variants?.length > 0 && (
                 <div className="mt-6 space-y-3">
                   <h3 className="font-medium text-lg">Available Options:</h3>
-                <div className="flex gap-3 flex-wrap">
+                  <div className="flex gap-3 flex-wrap">
                     {product.variants.map((variant) => (
                       <button
                         key={variant._id}
                         onClick={() => handleVariantSelect(variant)}
-                        className={`flex items-center gap-2 px-4 py-2 border rounded-md ${
-                          selectedVariant?._id === variant._id
+                        className={`flex items-center gap-2 px-4 py-2 border rounded-md ${selectedVariant?._id === variant._id
                             ? "border-black bg-gray-100"
                             : "border-gray-300"
-                        }`}
+                          }`}
                       >
                         {/* Color swatch */}
                         <span
                           className="w-5 h-5 rounded-full border"
-                          style={{ backgroundColor: variant.attributes.hexCode || "#ccc" }}
+                          style={{
+                            backgroundColor: variant.attributes.hexCode || "#ccc",
+                          }}
                         ></span>
 
                         {/* Color name + size */}
@@ -113,8 +142,7 @@ const ProductDetails = ({ product }) => {
                         </span>
                       </button>
                     ))}
-                </div>
-
+                  </div>
                 </div>
               )}
 
@@ -138,7 +166,7 @@ const ProductDetails = ({ product }) => {
                   </button>
                 </div>
                 <button
-                  onClick={() => setOpenCart(true)}
+                  onClick={handleAddToCart}
                   className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800"
                 >
                   Add To Cart
@@ -146,43 +174,6 @@ const ProductDetails = ({ product }) => {
                 <button className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800">
                   Buy Now
                 </button>
-              </div>
-
-              {/* -------- Bottom Actions ---------- */}
-              <div className="flex items-center gap-6 mt-8 text-gray-600 text-[18px]">
-                <button className="flex items-center gap-1 hover:text-black">
-                  <BarChart className="w-4 h-4" />
-                  Compare
-                </button>
-                <button className="flex items-center gap-1 hover:text-black">
-                  <Heart className="w-4 h-4" />
-                  Wishlist
-                </button>
-                <button className="flex items-center gap-1 hover:text-black">
-                  <HelpCircle className="w-4 h-4" />
-                  Ask Us
-                </button>
-                <button className="flex items-center gap-1 hover:text-black">
-                  <Share2 className="w-4 h-4" />
-                  Share
-                </button>
-              </div>
-
-              <hr className="my-6" />
-
-              <p className="flex items-center gap-1 text-gray-700 text-[18px]">
-                <Eye className="w-4 h-4" /> 24 people are viewing this right now
-              </p>
-
-              <div className="mt-5 space-y-1 text-[16px] text-gray-700">
-                <p className="flex items-center gap-1">
-                  <Truck className="w-4 h-4" /> Estimated Delivery: Up to 4
-                  business days
-                </p>
-                <p className="flex items-center gap-1">
-                  <RefreshCcw className="w-4 h-4" /> Free Shipping & Returns: On
-                  orders over $200
-                </p>
               </div>
             </div>
           </div>
@@ -192,7 +183,6 @@ const ProductDetails = ({ product }) => {
           </div>
         </div>
       </div>
-
     </>
   );
 };
