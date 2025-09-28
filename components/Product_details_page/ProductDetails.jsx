@@ -5,55 +5,120 @@ import {
   Heart, Share2, HelpCircle, BarChart, X
 } from "lucide-react";
 import Image from "next/image";
-import ProductFeatuImg from "../../public/hero-2.jpg";
 import Link from "next/link";
+import ProductsTabs from "./ProductsTabs";
 
-const ProductDetails = () => {
+const ProductDetails = ({ product }) => {
   const [numberCount, setNumberCount] = useState(1);
-  const [openCart, setOpenCart] = useState(false); // NEW: drawer state
+  const [openCart, setOpenCart] = useState(false);
+
+  // Track selected variant
+  const [selectedVariant, setSelectedVariant] = useState(null);
+
+  // fallback to base product or variant values
+  const activePrice = selectedVariant ? selectedVariant.price : product.price;
+  const activeStock = selectedVariant ? selectedVariant.stock : product.stock;
+  const activeImage = selectedVariant
+    ? selectedVariant.images?.[0] || product.images?.[0]
+    : product.images?.[0];
+
+  // calculate discounted price
+  const discountedPrice =
+    product.discountType === "percentage"
+      ? activePrice - (activePrice * product.discount) / 100
+      : activePrice - product.discount;
+
+  // handle variant select
+  const handleVariantSelect = (variant) => {
+    setSelectedVariant(variant);
+    setNumberCount(1);
+  };
 
   return (
     <>
       <div className="py-[100px]">
         <div className="container mx-auto">
           <div className="flex justify-between">
-            {/* ---------------item-left------------ */}
-            <div className="w-[48%] h-[450px]">
+            {/* -------- Left: main image ---------- */}
+            <div className="w-[48%] h-[550px]">
               <Image
                 className="w-full h-full object-cover"
-                src={ProductFeatuImg}
-                alt="Product"
+                src={activeImage || "/placeholder.png"}
+                alt={product.name}
+                width={500}
+                height={500}
               />
             </div>
 
-            {/* ---------------item-right------------ */}
+            {/* -------- Right: info ---------- */}
             <div className="w-[48%]">
               <p className="text-[16px] text-gray-500">
-                Brand: <span className="font-medium text-gray-700">Gallery</span>
+                Category:{" "}
+                <span className="font-medium text-gray-700">
+                  {product.category?.name}
+                </span>
               </p>
-              <h1 className="text-[28px] font-semibold mt-1">
-                Ikea Hol Acacia Side Table Wooden
-              </h1>           
+              <h1 className="text-[28px] font-semibold mt-1">{product.name}</h1>
+
               <div className="flex items-center gap-3 mt-2">
-                <span className="text-2xl font-semibold">$200</span>
+                <span className="text-2xl font-semibold">${discountedPrice}</span>
+                {product.discount > 0 && (
+                  <span className="line-through text-gray-500">
+                    ${activePrice}
+                  </span>
+                )}
                 <div className="flex items-center gap-1 text-yellow-500">
                   {[...Array(3)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-yellow-500" />
                   ))}
                   <span className="text-gray-700 text-[16px]">(3 review)</span>
                 </div>
-              </div>     
-              <div className="bg-red-50 text-red-600 mt-4 py-3 px-6 rounded-md text-[15px] font-medium inline-block">
-                Selling fast! Over 12 people have in their cart
               </div>
 
-              <ul className="list-disc list-inside mt-4 space-y-1 text-gray-700 text-[16px]">
-                <li>Mattress Support Is Mdf Board.</li>
-                <li>Recommended Mattress Size: 78 X 60 Inches.</li>
-                <li>The Product Will Require Carpenter For Assembly.</li>
-              </ul>
+              <div className="bg-red-50 text-red-600 mt-4 py-3 px-6 rounded-md text-[15px] font-medium inline-block">
+                Only {activeStock} left in stock!
+              </div>
 
-              {/* ---------------Quantity + Buttons------------ */}             
+              <p className="mt-4 text-gray-700 text-[16px]">{product.shortDesc}</p>
+
+              {/* -------- Variants ---------- */}
+              {product.variants?.length > 0 && (
+                <div className="mt-6 space-y-3">
+                  <h3 className="font-medium text-lg">Available Options:</h3>
+                <div className="flex gap-3 flex-wrap">
+                    {product.variants.map((variant) => (
+                      <button
+                        key={variant._id}
+                        onClick={() => handleVariantSelect(variant)}
+                        className={`flex items-center gap-2 px-4 py-2 border rounded-md ${
+                          selectedVariant?._id === variant._id
+                            ? "border-black bg-gray-100"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {/* Color swatch */}
+                        <span
+                          className="w-5 h-5 rounded-full border"
+                          style={{ backgroundColor: variant.attributes.hexCode || "#ccc" }}
+                        ></span>
+
+                        {/* Color name + size */}
+                        <span className="block font-medium">
+                          {variant.attributes.color} - {variant.attributes.size}
+                        </span>
+
+                        {/* Price & Stock */}
+                        <span className="text-sm text-gray-500 ml-2">
+                          ${variant.price} | {variant.stock} left
+                        </span>
+                      </button>
+                    ))}
+                </div>
+
+                </div>
+              )}
+
+              {/* -------- Quantity + Buttons ---------- */}
               <div className="flex items-center gap-3 mt-6">
                 <div className="flex items-center border rounded-md">
                   <button
@@ -64,7 +129,9 @@ const ProductDetails = () => {
                   </button>
                   <span className="px-4">{numberCount}</span>
                   <button
-                    onClick={() => setNumberCount(numberCount + 1)}
+                    onClick={() =>
+                      setNumberCount(Math.min(activeStock, numberCount + 1))
+                    }
                     className="px-3 py-1 text-lg"
                   >
                     +
@@ -81,19 +148,23 @@ const ProductDetails = () => {
                 </button>
               </div>
 
-              {/* --------------------Bottom actions--------------- */}
+              {/* -------- Bottom Actions ---------- */}
               <div className="flex items-center gap-6 mt-8 text-gray-600 text-[18px]">
                 <button className="flex items-center gap-1 hover:text-black">
-                  <BarChart className="w-4 h-4" />Compare
+                  <BarChart className="w-4 h-4" />
+                  Compare
                 </button>
                 <button className="flex items-center gap-1 hover:text-black">
-                  <Heart className="w-4 h-4" />Wishlist
+                  <Heart className="w-4 h-4" />
+                  Wishlist
                 </button>
                 <button className="flex items-center gap-1 hover:text-black">
-                  <HelpCircle className="w-4 h-4" />Ask Us
+                  <HelpCircle className="w-4 h-4" />
+                  Ask Us
                 </button>
                 <button className="flex items-center gap-1 hover:text-black">
-                  <Share2 className="w-4 h-4" />Share
+                  <Share2 className="w-4 h-4" />
+                  Share
                 </button>
               </div>
 
@@ -105,18 +176,24 @@ const ProductDetails = () => {
 
               <div className="mt-5 space-y-1 text-[16px] text-gray-700">
                 <p className="flex items-center gap-1">
-                  <Truck className="w-4 h-4" /> Estimated Delivery: Up to 4 business days
+                  <Truck className="w-4 h-4" /> Estimated Delivery: Up to 4
+                  business days
                 </p>
                 <p className="flex items-center gap-1">
-                  <RefreshCcw className="w-4 h-4" /> Free Shipping & Returns: On all orders over $200
+                  <RefreshCcw className="w-4 h-4" /> Free Shipping & Returns: On
+                  orders over $200
                 </p>
               </div>
             </div>
           </div>
+
+          <div className="mt-5">
+            <ProductsTabs />
+          </div>
         </div>
       </div>
 
-      {/* ------------------Cart Drawer-------------- */}
+      {/* -------- Cart Drawer ---------- */}
       {openCart && (
         <div
           onClick={() => setOpenCart(false)}
@@ -134,10 +211,24 @@ const ProductDetails = () => {
           </button>
         </div>
         <div className="p-4 flex items-center border-b">
-          <Image src={ProductFeatuImg} alt="cart item" width={60} height={60} className="border rounded" />
+          <Image
+            src={activeImage || "/placeholder.png"}
+            alt="cart item"
+            width={60}
+            height={60}
+            className="border rounded"
+          />
           <div className="ml-4 flex-1">
-            <p className="text-sm font-medium">Ikea Hol Acacia Side Table Wooden</p>
-            <p className="text-sm text-gray-600">{numberCount} × $200</p>
+            <p className="text-sm font-medium">{product.name}</p>
+            {selectedVariant && (
+              <p className="text-xs text-gray-500">
+                {selectedVariant.attributes.color} |{" "}
+                {selectedVariant.attributes.size}
+              </p>
+            )}
+            <p className="text-sm text-gray-600">
+              {numberCount} × ${discountedPrice}
+            </p>
           </div>
           <button className="text-red-500 text-xl">&times;</button>
         </div>
@@ -145,13 +236,18 @@ const ProductDetails = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
           <div className="flex justify-between mb-4">
             <span className="font-medium">Subtotal:</span>
-            <span className="font-semibold">${200 * numberCount}</span>
+            <span className="font-semibold">
+              ${discountedPrice * numberCount}
+            </span>
           </div>
           <div className="flex gap-2">
             <button className="flex-1 bg-gray-700 text-white py-2 rounded hover:bg-gray-800">
               View Cart
             </button>
-            <Link href="/checkout" className="flex-1 bg-black text-white py-2 rounded hover:bg-gray-800 text-center">
+            <Link
+              href="/checkout"
+              className="flex-1 bg-black text-white py-2 rounded hover:bg-gray-800 text-center"
+            >
               Checkout
             </Link>
           </div>

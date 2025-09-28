@@ -30,8 +30,7 @@ const ProductsTabs = () => {
 
   return (
     <div className="pb-[100px]">
-        <div className="container">
-            <div className="max-w-[80%] mx-auto">
+
                 <div className="border rounded-md bg-white">
                     {/* ----------------Tabs------ */}
                     <div className="flex border-b overflow-x-auto">
@@ -74,9 +73,9 @@ const ProductsTabs = () => {
                         </div>
                          }                       
                     </div>
-                    </div>
+         
             </div>
-        </div>
+    
     </div>
   )
 }

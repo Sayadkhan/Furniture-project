@@ -58,7 +58,7 @@ const ShopCard = ({product}) => {
                 </div>
                 
                 <Button className="mt-4 w-full">
-                    <Link href="/productDetails"> View Details</Link>                   
+                    <Link href={`/product/${product.slug}`}> View Details</Link>                   
                 </Button>
             </CardContent>
         </Card>

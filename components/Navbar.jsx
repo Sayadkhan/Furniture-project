@@ -59,8 +59,9 @@ const Navbar = () => {
           </NavigationMenu>
           {/* -------middle-menu--------- */}
           <div className="text-black flex gap-[35px]">
-            <Link className='text-[18px] font-medium' href="">About</Link>
+            <Link className='text-[18px] font-medium' href="/">Home</Link>
             <Link className='text-[18px] font-medium' href="/shop">Shop</Link>
+            <Link className='text-[18px] font-medium' href="">About</Link>
             <Link className='text-[18px] font-medium' href="">Contact</Link>
           </div>
           {/* -------------search-bar-------- */}

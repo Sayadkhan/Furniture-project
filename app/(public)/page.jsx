@@ -7,7 +7,7 @@ import LatestProducts from "@/components/Home_page/LatestProduct";
 import PersentFerniture from "@/components/Home_page/PersentFerniture";
 import PopularBrands from "@/components/Home_page/PopularBrands";
 import TopPicks from "@/components/Home_page/TopPicks";
-import Image from "next/image";
+
 
 export default function Home() {
   return (   
