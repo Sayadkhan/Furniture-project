@@ -29,7 +29,7 @@ const CheckoutPage = () => {
 
   const { items, totalPrice } = useSelector((state) => state.cart);
 
-  console.log(items)
+
 
   const [shipping, setShipping] = useState("free");
   const [payment, setPayment] = useState("bank");
@@ -93,7 +93,7 @@ const CheckoutPage = () => {
           items,
           shippingMethod: shipping,
           paymentMethod: payment,
-          couponCode: appliedCoupon?.code || null, // 🎟️ send coupon
+          couponCode: appliedCoupon?.code || null, 
         }),
       });
 

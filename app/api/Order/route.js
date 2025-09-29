@@ -80,6 +80,8 @@ export async function POST(req) {
       coupon: appliedCoupon,
     };
 
+    console.log(orderData);
+
     const order = await Order.create(orderData);
 
     return new Response(JSON.stringify(order), { status: 201 });

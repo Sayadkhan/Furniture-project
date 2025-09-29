@@ -12,7 +12,6 @@ const page = () => {
         <AboutTabs />
         <AboutCouter />
         <AboutFeatures />
-        {/* <AboutUs /> */}
     </div>
   )
 }
