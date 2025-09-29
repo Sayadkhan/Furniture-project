@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import countries from "world-countries";
-
 import { useRouter } from "next/navigation";
 import { clearCart } from "@/redux/slice/CartSlice";
 import { toast } from "react-toastify";
@@ -30,8 +29,15 @@ const CheckoutPage = () => {
 
   const { items, totalPrice } = useSelector((state) => state.cart);
 
+  console.log(items)
+
   const [shipping, setShipping] = useState("free");
   const [payment, setPayment] = useState("bank");
+
+  // 🎟️ coupon state
+  const [couponCode, setCouponCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
 
   // redirect if cart empty
   useEffect(() => {
@@ -40,10 +46,41 @@ const CheckoutPage = () => {
     }
   }, [items, router]);
 
-  // Calculate shipping cost
+  // shipping cost
   const shippingCost =
     shipping === "flat" ? 5 : shipping === "local" ? 10 : 0;
-  const grandTotal = totalPrice + shippingCost;
+
+  // subtotal before discount
+  const subtotal = totalPrice;
+
+  // final total
+  const grandTotal = subtotal - discountAmount + shippingCost;
+
+  // 🎟️ handle apply coupon (calls backend for validation)
+  const handleApplyCoupon = async () => {
+    if (!couponCode) return toast.error("Enter a coupon code");
+
+    try {
+      const res = await fetch("/api/coupon/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponCode, subtotal }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "Invalid coupon");
+
+      setDiscountAmount(data.discountAmount);
+      setAppliedCoupon(data);
+      toast.success(`Coupon "${couponCode}" applied!`);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+      setDiscountAmount(0);
+      setAppliedCoupon(null);
+    }
+  };
 
   // Handle Order
   const handlePlaceOrder = async () => {
@@ -54,26 +91,21 @@ const CheckoutPage = () => {
         body: JSON.stringify({
           customer: form,
           items,
-          totalPrice: grandTotal,
           shippingMethod: shipping,
           paymentMethod: payment,
+          couponCode: appliedCoupon?.code || null, // 🎟️ send coupon
         }),
       });
 
       if (!res.ok) throw new Error("Order failed");
       await res.json();
 
-      alert("✅ Order placed successfully!");
-
-          toast.success(
-            `✅Your Order is Successfull`
-          );
-
+      toast.success("✅ Your Order is Successful");
       dispatch(clearCart());
       router.push("/");
     } catch (error) {
       console.error(error);
-      alert("❌ Failed to place order.");
+      toast.error("❌ Failed to place order.");
     }
   };
 
@@ -200,8 +232,48 @@ const CheckoutPage = () => {
             ))}
           </div>
 
-          {/* Shipping */}
-          <div className="border-b py-4">
+          {/* Coupon Input */}
+          <div className="mt-4 flex gap-2">
+            <input
+              type="text"
+              placeholder="Coupon code"
+              className="flex-1 border p-3 rounded-lg"
+              value={couponCode}
+              onChange={(e) => setCouponCode(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={handleApplyCoupon}
+              className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-black transition cursor-pointer"
+            >
+              Apply
+            </button>
+          </div>
+
+          {/* Price Breakdown */}
+          <div className="border-t mt-4 pt-4 space-y-2 text-[16px]">
+            <div className="flex justify-between">
+              <span>Subtotal</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            {discountAmount > 0 && (
+              <div className="flex justify-between text-green-600 font-medium">
+                <span>Discount ({appliedCoupon?.code})</span>
+                <span>- ${discountAmount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <span>Shipping</span>
+              <span>${shippingCost.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between font-semibold text-[18px]">
+              <span>Total</span>
+              <span>${grandTotal.toFixed(2)}</span>
+            </div>
+          </div>
+
+          {/* Shipping Options */}
+          <div className="border-t py-4">
             <p className="font-medium mb-3 text-[18px]">Shipping</p>
             <div className="space-y-2 text-[16px]">
               <label className="flex items-center gap-2">
@@ -229,12 +301,6 @@ const CheckoutPage = () => {
                 Local pickup: <span className="ml-1">$10</span>
               </label>
             </div>
-          </div>
-
-          {/* Total */}
-          <div className="flex justify-between py-4 font-semibold text-[18px]">
-            <span>Total</span>
-            <span>${grandTotal.toFixed(2)}</span>
           </div>
 
           {/* Payment Section */}

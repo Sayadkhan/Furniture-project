@@ -7,29 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X } from "lucide-react";
 import { toast } from "react-toastify";
 
-export default function AddSubCategoryPage() {
-  const [categories, setCategories] = useState([]);
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [category, setCategory] = useState("");
+const CategoryEditForm = ({ category }) => {
+  const [name, setName] = useState(category?.name || "");
+  const [desc, setDesc] = useState(category?.desc || "");
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [preview, setPreview] = useState(category?.image || null);
   const [loading, setLoading] = useState(false);
 
-
-
-  // Fetch categories for dropdown
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await fetch("/api/category");
-      const data = await res.json();
-      if (res.ok) {
-        setCategories(data.category || []);
-      }
-    };
-    fetchCategories();
-  }, []);
-
+  // Handle image selection
   const handleImageChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -38,10 +23,11 @@ export default function AddSubCategoryPage() {
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !category) {
-      toast.error("Name and Category are required");
+    if (!name) {
+      toast.error("Category name is required");
       return;
     }
 
@@ -50,27 +36,21 @@ export default function AddSubCategoryPage() {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("desc", desc);
-      formData.append("category", category);
       if (image) formData.append("image", image);
 
-      const res = await fetch("/api/subcategory", {
-        method: "POST",
+      const res = await fetch(`/api/category/${category._id}`, {
+        method: "PATCH",
         body: formData,
       });
 
       const data = await res.json();
       if (res.ok) {
-        toast.success("SubCategory added successfully!");
-        setName("");
-        setDesc("");
-        setImage(null);
-        setPreview(null);
-        setCategory("");
+        toast.success("Category updated successfully!");
       } else {
         toast.error(data.error || "Something went wrong");
       }
     } catch (error) {
-      toast.error(error.message || "Error adding subcategory");
+      toast.error(error.message || "Error updating category");
     } finally {
       setLoading(false);
     }
@@ -78,10 +58,10 @@ export default function AddSubCategoryPage() {
 
   return (
     <div className="flex justify-center py-10">
-      <Card className="w-full max-w-lg shadow-lg">
+      <Card className="w-full max-w-4xl shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold">
-            Add New SubCategory
+            Edit Category
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -89,13 +69,13 @@ export default function AddSubCategoryPage() {
             {/* Name */}
             <div>
               <label className="block text-sm font-medium mb-1">
-                SubCategory Name *
+                Category Name *
               </label>
               <Input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Office Chairs, Coffee Tables"
+                placeholder="e.g. Sofa, Table, Chair"
               />
             </div>
 
@@ -107,35 +87,20 @@ export default function AddSubCategoryPage() {
               <Textarea
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
-                placeholder="Write something about this subcategory..."
+                placeholder="Write something about this category..."
               />
-            </div>
-
-            {/* Parent Category Dropdown */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Parent Category *
-              </label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full border rounded-md p-2"
-              >
-                <option value="">Select Category</option>
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
             </div>
 
             {/* Image Upload */}
             <div>
               <label className="block text-sm font-medium mb-1">
-                SubCategory Image
+                Category Image
               </label>
-              <Input type="file" accept="image/*" onChange={handleImageChange} />
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
               {preview && (
                 <div className="relative mt-3 w-32 h-32">
                   <img
@@ -164,7 +129,7 @@ export default function AddSubCategoryPage() {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving...
                 </>
               ) : (
-                "Add SubCategory"
+                "Update Category"
               )}
             </Button>
           </form>
@@ -172,4 +137,6 @@ export default function AddSubCategoryPage() {
       </Card>
     </div>
   );
-}
+};
+
+export default CategoryEditForm;

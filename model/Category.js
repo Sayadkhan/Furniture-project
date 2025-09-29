@@ -5,8 +5,9 @@ const CategorySchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true },
     desc: { type: String },
     image: { type: String, required: true },
-    Featured: { type: Boolean, default: false },
-    New_Arrivable: { type: Boolean, default: true },
+    featured: { type: Boolean, default: false },
+    top_category: { type: Boolean, default: false },
+    new_arrivable: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

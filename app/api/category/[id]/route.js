@@ -1,37 +1,31 @@
 import cloudinary from "@/lib/cloudinary";
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/model/Category";
-
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function PATCH(req, { params }) {
   try {
     await connectDB();
-    const category = await Category.find().sort({ createdAt: -1 });
 
-    return NextResponse.json({ success: true, category });
-  } catch (err) {
-    return NextResponse.json(
-      { success: false, message: err.message },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(req) {
-  try {
-    await connectDB();
+    const { id } = await params;
+    const category = await Category.findById(id);
+    if (!category) {
+      return NextResponse.json(
+        { error: "Category not found" },
+        { status: 404 }
+      );
+    }
 
     const formData = await req.formData();
     const name = formData.get("name");
     const desc = formData.get("desc");
     const imageFile = formData.get("image");
 
-    if (!name) {
-      return NextResponse.json({ error: "Name is required" }, { status: 400 });
-    }
+    // Update name and description if provided
+    if (name) category.name = name;
+    if (desc) category.desc = desc;
 
-    let imageUrl = "";
+    // Handle image upload
     if (imageFile && imageFile.size > 0) {
       const buffer = Buffer.from(await imageFile.arrayBuffer());
       const uploadRes = await new Promise((resolve, reject) => {
@@ -44,18 +38,14 @@ export async function POST(req) {
         );
         stream.end(buffer);
       });
-      imageUrl = uploadRes.secure_url;
+      category.image = uploadRes.secure_url;
     }
 
-    const category = await Category.create({
-      name,
-      desc,
-      image: imageUrl,
-    });
+    await category.save();
 
     return NextResponse.json(
       { success: true, data: category },
-      { status: 201 }
+      { status: 200 }
     );
   } catch (error) {
     console.error(error);

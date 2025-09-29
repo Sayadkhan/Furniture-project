@@ -6,7 +6,7 @@ export async function PATCH(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
 
     // Only allow updating specific fields

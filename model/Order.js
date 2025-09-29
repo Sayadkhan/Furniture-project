@@ -12,6 +12,7 @@ const OrderSchema = new mongoose.Schema(
       postal: { type: String, required: true },
       email: { type: String, required: true },
     },
+
     items: [
       {
         productId: {
@@ -20,27 +21,49 @@ const OrderSchema = new mongoose.Schema(
           required: true,
         },
         name: { type: String, required: true },
+        veriant: {},
         image: { type: String },
         price: { type: Number, required: true },
         quantity: { type: Number, required: true, min: 1 },
       },
     ],
+
+    // ✅ Coupon integration
+    coupon: {
+      code: { type: String },
+      discountType: {
+        type: String,
+        enum: ["percentage", "fixed"],
+      },
+      discountValue: { type: Number },
+      discountAmount: { type: Number, default: 0 },
+      couponId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Coupon",
+      },
+    },
+
+    subtotal: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
+
     shippingMethod: {
       type: String,
       enum: ["free", "flat", "local"],
       default: "free",
     },
+
     paymentMethod: {
       type: String,
       enum: ["bank", "check", "cod"],
       default: "cod",
     },
+
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed"],
       default: "pending",
     },
+
     deliveryStatus: {
       type: String,
       enum: ["pending", "shipped", "delivered"],

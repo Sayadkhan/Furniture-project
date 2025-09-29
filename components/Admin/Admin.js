@@ -51,7 +51,7 @@ const sidebarLinks = [
     label: "Coupons",
     icon: Ticket,
     children: [
-      { href: "/admin/coupons", label: "All Coupons" },
+      { href: "/admin/coupons/all", label: "All Coupons" },
       { href: "/admin/coupons/add", label: "Add Coupon" },
     ],
   },
@@ -59,7 +59,7 @@ const sidebarLinks = [
     label: "Orders",
     icon: ShoppingCart,
     children: [
-      { href: "/admin/order/all", label: "All Orders" },
+      { href: "/admin/order/all ", label: "All Orders" },
       // { href: "/admin/coupons/add", label: "Add Coupon" },
     ],
   },

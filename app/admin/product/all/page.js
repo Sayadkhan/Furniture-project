@@ -4,13 +4,6 @@ import Product from "@/model/Product";
 import Category from "@/model/Category";
 import SubCategory from "@/model/SubCategory";
 
-// import { connectDB } from '@/lib/mongodb';
-// import Product from '@/model/Product';
-// import Category from '@/model/Category';
-// import SubCategory from '@/model/SubCategory';
-
-// import ShopClient from "./ShopClient";
-
 async function getProducts() {
   await connectDB();
   const products = await Product.find({})
@@ -22,7 +15,6 @@ async function getProducts() {
 
 const page = async () => {
   const products = await getProducts();
-  console.log(products);
 
   return (
     <div>
