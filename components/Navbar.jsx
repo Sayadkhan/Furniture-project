@@ -61,8 +61,8 @@ const Navbar = () => {
           <div className="text-black hidden xl:flex gap-[35px]">
             <Link className='text-[18px] font-medium' href="/">Home</Link>
             <Link className='text-[18px] font-medium' href="/shop">Shop</Link>
-            <Link className='text-[18px] font-medium' href="">About</Link>
-            <Link className='text-[18px] font-medium' href="">Contact</Link>
+            <Link className='text-[18px] font-medium' href="/aboutus">About</Link>
+            <Link className='text-[18px] font-medium' href="/contactus">Contact</Link>
           </div>
           {/* -------------search-bar-------- */}
           <div className="border border-[#e4e4e4] rounded-md p-3 flex items-center w-full max-w-full lg:max-w-[450px] xl:max-w-[350px]">
