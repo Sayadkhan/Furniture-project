@@ -53,7 +53,7 @@ const ProductsTabs = ({product}) => {
                     <div className="p-4">
                         {active === "description" && (
                             <div className="">
-                              {product.desc}
+                              {product?.desc}
                             </div>
                         )}                       
                         {active === "reviews" && ( <p className="text-gray-700">1 customer review goes here.</p>)}

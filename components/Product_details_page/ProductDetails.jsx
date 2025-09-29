@@ -19,17 +19,17 @@ const ProductDetails = ({ product, userId }) => {
   const [selectedVariant, setSelectedVariant] = useState(null);
 
   // fallback to base product or variant values
-  const activePrice = selectedVariant ? selectedVariant.price : product.price;
-  const activeStock = selectedVariant ? selectedVariant.stock : product.stock;
+  const activePrice = selectedVariant ? selectedVariant?.price : product?.price;
+  const activeStock = selectedVariant ? selectedVariant?.stock : product?.stock;
   const activeImage = selectedVariant
-    ? selectedVariant.images?.[0] || product.images?.[0]
-    : product.images?.[0];
+    ? selectedVariant?.images?.[0] || product?.images?.[0]
+    : product?.images?.[0];
 
   // calculate discounted price
   const discountedPrice =
-    product.discountType === "percentage"
-      ? activePrice - (activePrice * product.discount) / 100
-      : activePrice - product.discount;
+    product?.discountType === "percentage"
+      ? activePrice - (activePrice * product?.discount) / 100
+      : activePrice - product?.discount;
 
   // handle variant select
   const handleVariantSelect = (variant) => {
@@ -47,8 +47,8 @@ const ProductDetails = ({ product, userId }) => {
     dispatch(
       addToCart({
         userId: userId || "guest",
-        productId: product._id,
-        name: product.name,
+        productId: product?._id,
+        name: product?.name,
         price: discountedPrice,
         quantity: numberCount,
         variant: selectedVariant,
@@ -57,7 +57,7 @@ const ProductDetails = ({ product, userId }) => {
     );
 
     toast.success(
-      `✅ Added ${numberCount} x ${selectedVariant?.attributes?.color || product.name
+      `✅ Added ${numberCount} x ${selectedVariant?.attributes?.color || product?.name
       } to cart`
     );
   };
@@ -72,7 +72,7 @@ const ProductDetails = ({ product, userId }) => {
               <Image
                 className="w-full h-full object-cover"
                 src={activeImage || "/placeholder.png"}
-                alt={product.name}
+                alt={product?.name}
                 width={500}
                 height={500}
               />
@@ -83,14 +83,14 @@ const ProductDetails = ({ product, userId }) => {
               <p className="text-[16px] text-gray-500">
                 Category:{" "}
                 <span className="font-medium text-gray-700">
-                  {product.category?.name}
+                  {product?.category?.name}
                 </span>
               </p>
-              <h1 className="text-[28px] font-semibold mt-1">{product.name}</h1>
+              <h1 className="text-[28px] font-semibold mt-1">{product?.name}</h1>
 
               <div className="flex items-center gap-3 mt-2">
                 <span className="text-2xl font-semibold">${discountedPrice}</span>
-                {product.discount > 0 && (
+                {product?.discount > 0 && (
                   <span className="line-through text-gray-500">
                     ${activePrice}
                   </span>
@@ -107,18 +107,18 @@ const ProductDetails = ({ product, userId }) => {
                 Only {activeStock} left in stock!
               </div>
 
-              <p className="mt-4 text-gray-700 text-[16px]">{product.shortDesc}</p>
+              <p className="mt-4 text-gray-700 text-[16px]">{product?.shortDesc}</p>
 
               {/* -------- Variants ---------- */}
-              {product.variants?.length > 0 && (
+              {product?.variants?.length > 0 && (
                 <div className="mt-6 space-y-3">
                   <h3 className="font-medium text-lg">Available Options:</h3>
                   <div className="flex gap-3 flex-wrap">
-                    {product.variants.map((variant) => (
+                    {product?.variants?.map((variant) => (
                       <button
-                        key={variant._id}
+                        key={variant?._id}
                         onClick={() => handleVariantSelect(variant)}
-                        className={`flex items-center gap-2 px-4 py-2 border rounded-md ${selectedVariant?._id === variant._id
+                        className={`flex items-center gap-2 px-4 py-2 border rounded-md ${selectedVariant?._id === variant?._id
                             ? "border-black bg-gray-100"
                             : "border-gray-300"
                           }`}
@@ -127,18 +127,18 @@ const ProductDetails = ({ product, userId }) => {
                         <span
                           className="w-5 h-5 rounded-full border"
                           style={{
-                            backgroundColor: variant.attributes.hexCode || "#ccc",
+                            backgroundColor: variant?.attributes?.hexCode || "#ccc",
                           }}
                         ></span>
 
                         {/* Color name + size */}
                         <span className="block font-medium">
-                          {variant.attributes.color} - {variant.attributes.size}
+                          {variant?.attributes?.color} - {variant?.attributes?.size}
                         </span>
 
                         {/* Price & Stock */}
                         <span className="text-sm text-gray-500 ml-2">
-                          ${variant.price} | {variant.stock} left
+                          ${variant?.price} | {variant?.stock} left
                         </span>
                       </button>
                     ))}

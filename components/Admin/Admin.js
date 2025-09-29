@@ -55,8 +55,16 @@ const sidebarLinks = [
       { href: "/admin/coupons/add", label: "Add Coupon" },
     ],
   },
-  { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
-  { href: "/admin/customers", label: "Customers", icon: Users },
+  {
+    label: "Orders",
+    icon: ShoppingCart,
+    children: [
+      { href: "/admin/order/all", label: "All Orders" },
+      // { href: "/admin/coupons/add", label: "Add Coupon" },
+    ],
+  },
+  // { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
+  // { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
