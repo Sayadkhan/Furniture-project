@@ -3,12 +3,11 @@ import React, { Suspense } from "react";
 import ProductList from "./ProductList";
 
 export default async function Page({ params }) {
-  const { id } = params;
+  const { id } = await params;
 
   return (
     <div className="container mx-auto min-h-screen p-6">     
       <Suspense fallback={<LoadingSkeleton />}>
-        {/* Product list will render after DB fetch */}
         <ProductList id={id} />
       </Suspense>
     </div>

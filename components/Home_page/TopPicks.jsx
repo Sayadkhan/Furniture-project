@@ -20,12 +20,12 @@ const TopPicks = async () => {
     <div className="pb-[50px] lg:pb-[100px]">
       <div className="container">
         <h3 className="text-[35px] font-semibold text-black mb-5">Top Picks</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="flex flex-wrap items-center justify-center gap-5">
           {products.length > 0 ? (
             products.map((item) => (
               <div
                 key={item._id}
-                className="w-full pb-4 shadow overflow-hidden rounded-lg group"
+                className="w-80 lg:w-80 pb-4 shadow overflow-hidden rounded-lg group"
               >
                 <Link href={`/product/${item.slug}`}>
                   <div className="w-full h-[250px] overflow-hidden">

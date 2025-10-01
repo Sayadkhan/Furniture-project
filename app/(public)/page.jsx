@@ -1,6 +1,8 @@
 import BedRoomsection from "@/components/Home_page/BedRoomsection";
 import CartImg from "@/components/Home_page/CartImg";
 import CategoryIcons from "@/components/Home_page/CategoryIcons";
+import CategoryProduct from "@/components/Home_page/CategoryProduct";
+import FeaturedCategory from "@/components/Home_page/Featured";
 import Featured from "@/components/Home_page/Featured";
 import Hero from "@/components/Home_page/Hero";
 import LatestProducts from "@/components/Home_page/LatestProduct";
@@ -15,7 +17,9 @@ export default function Home() {
    <>
       <Hero />
       <CategoryIcons />
-      <Featured />  
+      <Suspense fallback={<p>Loading featured category...</p>}>
+          <FeaturedCategory/>
+      </Suspense>
         <Suspense fallback={<p>Loading top picks...</p>}>
         <TopPicks />
       </Suspense>
@@ -24,6 +28,12 @@ export default function Home() {
           <LatestProducts />
       </Suspense>
       <BedRoomsection />
+
+    <Suspense fallback={<p>Loading categorywise product....</p>}>
+      <CategoryProduct/>
+    </Suspense>
+
+      
       <PopularBrands />
    </>
   );

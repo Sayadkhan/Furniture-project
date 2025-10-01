@@ -3,8 +3,8 @@ import React, { Suspense } from "react";
 import ProductDetailsWrapper from "./ProductDetailsWrapper";
 
 
-export default function Page({ params }) {
-  const { slug } = params;
+export default async function Page({ params }) {
+  const { slug } = await params;
 
   return (
     <div className="container mx-auto min-h-screen p-6">
@@ -25,8 +25,3 @@ function ProductSkeleton() {
   );
 }
 
-// function TabsSkeleton() {
-//   return (
-//     <div className="animate-pulse bg-gray-100 rounded-xl h-40 mt-6" />
-//   );
-// }
