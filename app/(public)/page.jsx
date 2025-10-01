@@ -7,6 +7,7 @@ import LatestProducts from "@/components/Home_page/LatestProduct";
 import PersentFerniture from "@/components/Home_page/PersentFerniture";
 import PopularBrands from "@/components/Home_page/PopularBrands";
 import TopPicks from "@/components/Home_page/TopPicks";
+import { Suspense } from "react";
 
 
 export default function Home() {
@@ -15,9 +16,13 @@ export default function Home() {
       <Hero />
       <CategoryIcons />
       <Featured />  
-      <TopPicks />
+        <Suspense fallback={<p>Loading top picks...</p>}>
+        <TopPicks />
+      </Suspense>
       <PersentFerniture />   
-      <LatestProducts />
+      <Suspense fallback={<p>Loading Latestest product....</p>}>
+          <LatestProducts />
+      </Suspense>
       <BedRoomsection />
       <PopularBrands />
    </>

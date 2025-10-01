@@ -1,33 +1,30 @@
-import ProductPage from '@/components/product/ProductPage';
-import { connectDB } from '@/lib/mongodb';
-import Product from '@/model/Product';
-import React from 'react'
+// app/category/[id]/page.jsx
+import React, { Suspense } from "react";
+import ProductList from "./ProductList";
 
-async function getProduct(id) { 
-  await connectDB(); 
-  const product = await Product.find({ category: id }) 
-  .populate("category", "name")
-  .populate("subcategory", "name")
-  .lean(); 
-   
-  if (!product) return null; 
-  
-  return JSON.parse(JSON.stringify(product)); 
-}
-
-const page = async ({params}) => {
-  
-  const {id} = await params;
-  const product = await getProduct(id);
-
-  console.log(product)
-
+export default async function Page({ params }) {
+  const { id } = params;
 
   return (
-    <div>
-      <ProductPage product={product}/>
+    <div className="container mx-auto min-h-screen p-6">     
+      <Suspense fallback={<LoadingSkeleton />}>
+        {/* Product list will render after DB fetch */}
+        <ProductList id={id} />
+      </Suspense>
     </div>
-  )
+  );
 }
 
-export default page
+// A simple skeleton or spinner while loading
+function LoadingSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div
+          key={i}
+          className="animate-pulse bg-gray-200 rounded-xl h-40"
+        />
+      ))}
+    </div>
+  );
+}

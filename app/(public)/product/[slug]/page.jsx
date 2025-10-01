@@ -1,37 +1,32 @@
-
-import ProductDetails from '@/components/Product_details_page/ProductDetails'
-import ProductsTabs from '@/components/Product_details_page/ProductsTabs'
-import { connectDB } from '@/lib/mongodb';
-import Product from '@/model/Product';
-import Category from '@/model/Category';
-import SubCategory from '@/model/SubCategory';
-import React from 'react'
+// app/product/[slug]/page.jsx
+import React, { Suspense } from "react";
+import ProductDetailsWrapper from "./ProductDetailsWrapper";
 
 
-async function getProduct(slug) { 
-  await connectDB(); 
-  const product = await Product.findOne({ slug }) 
-  .populate("category", "name")
-  .populate("subcategory", "name")
-  .lean(); 
-   
-  if (!product) return null; 
-  
-  return JSON.parse(JSON.stringify(product)); 
-}
-
-
-const page = async ({params}) => {
-
-  const {slug} = await params;
-  const product = await getProduct(slug);
+export default function Page({ params }) {
+  const { slug } = params;
 
   return (
-    <>
-    <ProductDetails product={product} />
+    <div className="container mx-auto min-h-screen p-6">
+      {/* Product Info */}
+      <Suspense fallback={<ProductSkeleton />}>
+        <ProductDetailsWrapper slug={slug} />
+      </Suspense>
 
-    </>
-  )
+      {/* Tabs (stream separately) */}
+  
+    </div>
+  );
 }
 
-export default page
+function ProductSkeleton() {
+  return (
+    <div className="animate-pulse rounded-xl bg-gray-200 h-64 w-full" />
+  );
+}
+
+// function TabsSkeleton() {
+//   return (
+//     <div className="animate-pulse bg-gray-100 rounded-xl h-40 mt-6" />
+//   );
+// }
