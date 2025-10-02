@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -9,7 +9,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const router = useRouter()
+  const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,11 +24,8 @@ export default function AdminLogin() {
       });
 
       const data = await res.json();
-
       if (!res.ok) throw new Error(data.error || "Invalid credentials");
 
-      // ✅ redirect to dashboard (full reload)
-      // window.location.href = "/admin/dashboard";
       router.push("/admin/dashboard");
     } catch (err) {
       setError(err.message || "Login failed");
@@ -38,40 +35,65 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8 border">
-        <h1 className="text-2xl font-bold text-gray-900 text-center mb-6">Admin Login</h1>
-        {error && <div className="mb-4 p-2 text-sm text-red-700 bg-red-100 rounded">{error}</div>}
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-900"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-gray-900"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gray-900 text-white py-2 rounded hover:bg-gray-800 transition disabled:opacity-50"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
+  <div className="">
+      <div className="min-h-screen flex">
+      {/* Left Side */}
+      <div className="hidden md:flex w-1/2 bg-yellow-700 text-white flex-col justify-center items-center p-12">
+        <h1 className="text-4xl font-bold mb-4">Welcome to FurniAdmin 👋</h1>
+        <p className="text-lg">
+          Manage your furniture store easily. Track products, orders, and stock from a single place.
+        </p>
+      </div>
+
+      {/* Right Side */}
+      <div className="flex flex-1 justify-center items-center bg-gray-50 p-8">
+        <div className="w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">Admin Login</h2>
+
+          {error && (
+            <div className="mb-4 p-2 text-sm text-red-700 bg-red-100 rounded">{error}</div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@example.com"
+                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 transition"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="w-full border border-gray-300 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-700 transition"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-yellow-700 text-white py-2 rounded-lg hover:bg-yellow-800 transition disabled:opacity-50 font-medium"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+          </form>
+
+          <p className="text-xs text-gray-500 mt-4 text-center">
+            &copy; 2025 YourFurniture. All rights reserved.
+          </p>
+        </div>
       </div>
     </div>
+  </div>
   );
 }

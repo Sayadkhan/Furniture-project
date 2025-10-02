@@ -187,7 +187,7 @@ export default function Admin({ children }) {
             {profileOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border">
                 <Link
-                  href="/admin/settings"
+                  href="/admin/profile"
                   className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                 >
                   <User size={16} /> Profile
