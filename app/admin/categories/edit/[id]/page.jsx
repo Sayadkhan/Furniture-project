@@ -11,14 +11,14 @@ async function getCategory(id) {
   const category = await Category.findOne({
     _id: new mongoose.Types.ObjectId(id),
   })
-  
-
-  console.log(category);
 
   if (!category) return null;
 
   return JSON.parse(JSON.stringify(category));
 }
+
+
+export const dynamic = 'force-dynamic';
 
 
 

@@ -14,6 +14,8 @@ async function getProducts() {
   return JSON.parse(JSON.stringify(products));
 }
 
+export const dynamic = 'force-dynamic';
+
 const ProductPage = async () => {
   const products = await getProducts();
 

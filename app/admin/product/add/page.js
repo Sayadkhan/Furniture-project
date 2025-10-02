@@ -22,6 +22,8 @@ async function getAllCategoryWithSub() {
   return JSON.parse(JSON.stringify(categoriesWithSub));
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function AddProductPage() {
   const categoriesWithSub = await getAllCategoryWithSub();
 

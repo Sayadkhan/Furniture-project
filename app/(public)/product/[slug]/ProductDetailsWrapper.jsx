@@ -5,6 +5,9 @@ import { connectDB } from "@/lib/mongodb";
 import Product from "@/model/Product";
 
 
+export const dynamic = 'force-dynamic';
+
+
 export default async function ProductDetailsWrapper({ slug }) {
   await connectDB();
 

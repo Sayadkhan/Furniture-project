@@ -13,6 +13,8 @@ async function getAllCategory() {
   return JSON.parse(JSON.stringify(categories));
 }
 
+export const dynamic = 'force-dynamic';
+
 const FeaturedCategory = async () => {
   const categories = await getAllCategory();
 

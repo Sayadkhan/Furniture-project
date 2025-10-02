@@ -1,6 +1,8 @@
 import React, { Suspense } from "react";
 import OrderTable from "./components/OrderTable";
 
+export const dynamic = "force-dynamic";
+
 const page = () => {
   return (
     <div>

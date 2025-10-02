@@ -13,6 +13,8 @@ async function getLatestProducts() {
   return JSON.parse(JSON.stringify(products));
 }
 
+export const dynamic = 'force-dynamic';
+
 const LatestProducts = async () => {
   const products = await getLatestProducts(); 
 

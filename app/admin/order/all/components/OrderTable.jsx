@@ -11,6 +11,9 @@ async function getAllOrder() {
   return JSON.parse(JSON.stringify(allOrder));
 }
 
+
+export const dynamic = 'force-dynamic';
+
 const OrderTable = async () => {
   const allOrder = await getAllOrder();
   return (

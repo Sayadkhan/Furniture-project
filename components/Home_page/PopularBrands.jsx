@@ -13,6 +13,7 @@ async function getFeaturedProducts() {
   return JSON.parse(JSON.stringify(products));
 }
 
+export const dynamic = 'force-dynamic';
 
 
 const PopularBrands = async () => {

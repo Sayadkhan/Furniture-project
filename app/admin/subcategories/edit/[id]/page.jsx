@@ -21,6 +21,7 @@ async function getSubCategory(id) {
 
 
 
+export const dynamic = 'force-dynamic';
 
 
 

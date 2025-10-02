@@ -13,6 +13,9 @@ async function getAllCategory() {
   return JSON.parse(JSON.stringify(categories));
 }
 
+
+export const dynamic = 'force-dynamic';
+
 const page = async () => {
 
     const category = await getAllCategory();

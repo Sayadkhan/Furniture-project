@@ -3,6 +3,10 @@ import React, { Suspense } from "react";
 import ProductDetailsWrapper from "./ProductDetailsWrapper";
 
 
+
+export const dynamic = 'force-dynamic';
+
+
 export default async function Page({ params }) {
   const { slug } = await params;
 

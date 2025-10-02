@@ -2,7 +2,7 @@ import { Geist, Geist_Mono, Jost, Lato } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import ReduxProvider from "@/Providers/ReduxProvider";
-import { FaWhatsapp } from "react-icons/fa"; // WhatsApp icon
+import { FaWhatsapp } from "react-icons/fa";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,8 +38,6 @@ export default function RootLayout({ children }) {
         <ReduxProvider>
           <ToastContainer />
           {children}
-
-          {/* WhatsApp Floating Button */}
           <a
             href="https://wa.me/+8801611239608" // replace with your number
             target="_blank"

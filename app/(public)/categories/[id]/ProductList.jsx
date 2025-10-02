@@ -4,6 +4,9 @@ import ProductCard from "./ProductCard";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/model/Product";
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function ProductList({ id }) {
   await connectDB();
 

@@ -11,7 +11,11 @@ async function getTopSellProducts() {
     .populate("subcategory", "name")
     .lean();
   return JSON.parse(JSON.stringify(products));
+
+
 }
+
+export const dynamic = 'force-dynamic';
 
 const TopPicks = async () => {
   const products = await getTopSellProducts();

@@ -2,6 +2,9 @@
 import React, { Suspense } from "react";
 import ProductList from "./ProductList";
 
+
+export const dynamic = 'force-dynamic';
+
 export default async function Page({ params }) {
   const { id } = await params;
 

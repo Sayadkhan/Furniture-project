@@ -11,6 +11,8 @@ import PopularBrands from "@/components/Home_page/PopularBrands";
 import TopPicks from "@/components/Home_page/TopPicks";
 import { Suspense } from "react";
 
+export const dynamic = 'force-dynamic';
+
 
 export default function Home() {
   return (   

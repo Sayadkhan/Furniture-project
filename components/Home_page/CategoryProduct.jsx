@@ -28,6 +28,10 @@ async function getCategoryWiseProducts() {
 }
 
 
+export const dynamic = 'force-dynamic';
+
+
+
 
 const CategoryProduct = async () => {
   const categoryWiseProducts = await getCategoryWiseProducts();
