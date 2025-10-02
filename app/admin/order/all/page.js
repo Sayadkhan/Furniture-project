@@ -1,20 +1,12 @@
-import OrdersPage from "@/components/Admin/Order/OrderTable";
-import { connectDB } from "@/lib/mongodb";
-import Order from "@/model/Order";
-import React from "react";
+import React, { Suspense } from "react";
+import OrderTable from "./components/OrderTable";
 
-async function getAllOrder() {
-  await connectDB();
-  const allOrder = await Order.find({}).sort({ createdAt: -1 }).lean();
-
-  return JSON.parse(JSON.stringify(allOrder));
-}
-
-const page = async () => {
-  const allOrder = await getAllOrder();
+const page = () => {
   return (
     <div>
-      <OrdersPage allOrder={allOrder} />
+      <Suspense fallback={<>All Order Loading....</>}>
+        <OrderTable />
+      </Suspense>
     </div>
   );
 };

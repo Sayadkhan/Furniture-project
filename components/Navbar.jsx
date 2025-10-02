@@ -28,8 +28,8 @@ const Navbar = async () => {
   const categories = await getAllCategoryWithSub();
 
   return (
-    <div className="bg-[#000] text-white py-4 px-0 lg:px-6">
-      <div className="container">
+    <div className=" text-white  px-0 sticky top-0 z-[5000] shadow-md">
+      <div className="">
         <div className="bg-gray-100 px-3 py-3 flex items-center justify-center text-sm">
           {/* -------middle-menu--------- */}
           <div className="text-black hidden xl:flex gap-[35px]">

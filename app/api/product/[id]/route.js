@@ -86,23 +86,26 @@ export async function PUT(req, { params }) {
   }
 }
 
-export async function DELETE(req, { params }) {
+// ✅ Delete product
+export async function DELETE(req, context) {
   try {
     await connectDB();
-
-    const { id } = await params;
-
-    const product = await Product.findOneAndDelete({ id });
-
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    const { id } = await context.params;
+    const deleted = await Product.findByIdAndDelete(id);
+    if (!deleted) {
+      return NextResponse.json(
+        { message: "Product not found" },
+        { status: 404 }
+      );
     }
-
-    return NextResponse.json({
-      message: "✅ Product deleted successfully",
-      product,
-    });
+    return NextResponse.json(
+      { message: "Product deleted successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error deleting product", error: error.message },
+      { status: 500 }
+    );
   }
 }

@@ -57,15 +57,20 @@ export default function OrdersPage({ allOrder }) {
     console.log("Edit order:", order);
     // 👉 open edit modal / navigate to edit page
   };
+const handleDelete = async (id) => {
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this order? This action cannot be undone."
+  );
+  if (!confirmDelete) return;
 
-  const handleDelete = async (id) => {
-    try {
-      await fetch(`/api/Order/${id}`, { method: "DELETE" });
-      setOrders((prev) => prev.filter((o) => o._id !== id));
-    } catch (error) {
-      console.error("Delete failed:", error);
-    }
-  };
+  try {
+    await fetch(`/api/Order/${id}`, { method: "DELETE" });
+    setOrders((prev) => prev.filter((o) => o._id !== id));
+  } catch (error) {
+    console.error("Delete failed:", error);
+  }
+};
+
 
   return (
     <div className="p-6">

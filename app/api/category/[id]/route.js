@@ -52,3 +52,29 @@ export async function PATCH(req, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req, { params }) {
+  const { id } = params;
+
+  try {
+    await connectDB();
+    const deletedCategory = await Category.findByIdAndDelete(id);
+
+    if (!deletedCategory) {
+      return new Response(JSON.stringify({ message: "Category not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    return new Response(JSON.stringify({ message: "Category deleted" }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ message: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+}

@@ -39,6 +39,29 @@ const AllCategoryTable = ({ category }) => {
     }
   };
 
+  const handleDelete = async (id) => {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this category?"
+    );
+    if (!confirmDelete) return;
+
+    // Optimistic update
+    const previousCategories = [...categories];
+    setCategories((prev) => prev.filter((cat) => cat._id !== id));
+
+    try {
+      const res = await fetch(`/api/category/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        throw new Error("Failed to delete category");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete category");
+      // revert on error
+      setCategories(previousCategories);
+    }
+  };
+
   return (
     <Card className="overflow-hidden shadow-md border rounded-2xl">
       <div className="overflow-x-auto">
@@ -109,6 +132,7 @@ const AllCategoryTable = ({ category }) => {
                     size="sm"
                     variant="destructive"
                     className="rounded-lg"
+                    onClick={() => handleDelete(category._id)}
                   >
                     Delete
                   </Button>

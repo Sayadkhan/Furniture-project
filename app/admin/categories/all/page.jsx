@@ -1,6 +1,7 @@
 import AllCategoryTable from "@/components/Admin/Category/AllCategoryTable";
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/model/Category";
+import { Suspense } from "react";
 
 
 async function getAllCategory() {
@@ -18,7 +19,10 @@ const page = async () => {
 
   return (
     <div>
-      <AllCategoryTable category={category}/>
+      <Suspense fallback={<>loading Category....</>}>
+            <AllCategoryTable category={category}/>
+      </Suspense>
+  
     </div>
   )
 }

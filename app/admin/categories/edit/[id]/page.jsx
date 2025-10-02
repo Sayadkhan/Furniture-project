@@ -2,6 +2,7 @@ import CategoryEditFrom from '@/components/Admin/Category/CategoryEditFrom'
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/model/Category';
 import mongoose from 'mongoose';
+import { Suspense } from 'react';
 
 
 async function getCategory(id) {
@@ -30,7 +31,9 @@ const page = async ({params}) => {
 
   return (
     <div>
-      <CategoryEditFrom category={category}/>
+     <Suspense fallback={<>Loading Category Details...</>}>
+       <CategoryEditFrom category={category}/>
+     </Suspense>
     </div>
   )
 }

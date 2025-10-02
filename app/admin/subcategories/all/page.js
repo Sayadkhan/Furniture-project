@@ -2,7 +2,7 @@ import AllsubcategoryTable from "@/components/Admin/Subcategory/AllsubcategoryTa
 import { connectDB } from "@/lib/mongodb";
 import SubCategory from "@/model/SubCategory";
 import Category from "@/model/Category";
-import React from "react";
+import React, { Suspense } from "react";
 
 async function getAllCategory() {
   await connectDB();
@@ -19,7 +19,9 @@ const page = async () => {
 
   return (
     <div>
-      <AllsubcategoryTable subcategories={category} />
+      <Suspense fallback={<>Loading subcategory.....</>}>
+        <AllsubcategoryTable subcategories={category} />
+      </Suspense>
     </div>
   );
 };

@@ -21,6 +21,7 @@ import {
 import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "react-toastify";
 
 const ProductTable = ({ products }) => {
   const [productsData, setProductsData] = useState(products);
@@ -52,37 +53,32 @@ const ProductTable = ({ products }) => {
     }
   };
 
- const handleDelete = async (id) => {
-  // 1. Confirm
-  if (!confirm("Are you sure you want to delete this product?")) return;
+const handleDelete = async (id) => {
+  const confirmDelete = confirm("Are you sure you want to delete this product?");
+  if (!confirmDelete) return;
 
-  // 2. Optimistic UI update
   const prevProducts = [...productsData];
   setProductsData((prev) => prev.filter((p) => p._id !== id));
 
   try {
-    // 3. Call DELETE API
-    const res = await fetch(`/api/product/${id}`, {
-      method: "DELETE",
-    });
+    const res = await fetch(`/api/product/${id}`, { method: "DELETE" });
+    if (!res.ok) throw new Error("Failed to delete product");
 
-    console.log(res)
+    toast.success("✅ Product deleted successfully!");
 
-    if (!res.ok) {
-      throw new Error("Failed to delete product");
+    // Adjust current page if needed
+    const filteredProductsCount = filteredProducts.length - 1; // after delete
+    const newTotalPages = Math.ceil(filteredProductsCount / productsPerPage);
+    if (currentPage > newTotalPages && newTotalPages > 0) {
+      setCurrentPage(newTotalPages);
     }
 
-    const data = await res.json();
-    console.log("Deleted:", data);
   } catch (err) {
     console.error(err);
-    alert("❌ Could not delete product. Please try again.");
-
-    // 4. Revert UI on error
+    toast.error("❌ Could not delete product. Please try again.");
     setProductsData(prevProducts);
   }
 };
-
 
   const filteredProducts = productsData.filter((product) => {
     const matchesSearch = product.name
