@@ -15,7 +15,7 @@ const ProductSlider = ({ products }) => {
 
   return (
     <Swiper
-      modules={[Navigation, Pagination]}
+      modules={[Navigation]}
       spaceBetween={20}
       slidesPerView={1}
       breakpoints={{
@@ -23,12 +23,12 @@ const ProductSlider = ({ products }) => {
         1024: { slidesPerView: 3 },
       }}
       navigation
-      pagination={{ clickable: true }}
+      // pagination={{ clickable: true }}
       className="pb-10"
     >
       {products.map((product) => (
         <SwiperSlide key={product._id}>
-          <div className="p-[10px] shadow rounded-xl group bg-white">
+          <div className="p-[10px] shadow-2xl rounded-xl group bg-white border-2">
             <div className="w-full h-[200px] md:h-[250px] lg:h-[300px] overflow-hidden rounded-lg">
            <Link   href={`/product/${product.slug}`}>
               <Image

@@ -21,7 +21,7 @@ async function getProducts() {
 
 const page = async () => {
   const products = await getProducts();
-  console.log(products)
+
   return (
     <>
     <ShopClient products={products}/>

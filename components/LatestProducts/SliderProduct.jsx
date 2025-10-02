@@ -30,24 +30,28 @@ const SliderProduct = ({products}) => {
         >
           {products.map((item, index) => (
             <SwiperSlide key={index}>
-              <div className="w-full pb-4 shadow overflow-hidden rounded-lg group">
-                <Link href="">
-                  <div className="w-full h-[250px] overflow-hidden">
-                    <Image
-                      className='w-full h-full object-cover group-hover:scale-[1.2] transition-all duration-300'
-                      src={item.images[0]}
-                      width={400}
-                      height={400}
-                      alt={item.name}
-                    />
-                  </div>
-                  <div className="mt-3 pl-4">
-                    {/* <h5 className='text-[16px] font-normal text-[#575757]'>{item.title}</h5> */}
-                    <h3 className='text-[20px] font-medium'>{item.name}</h3>
-                    <span className='text-[16px] font-medium mt-1 block'>{item.price}</span>
-                  </div>
-                </Link>
+            <div className="relative w-full h-[300px] rounded-xl overflow-hidden group shadow-md">
+            <Link href={`/product/${item.slug}`} className="block w-full h-full">
+              {/* Product Image */}
+              <Image
+                src={item.images[0] || "https://via.placeholder.com/400x400.png?text=No+Image"}
+                alt={item.name}
+                width={400}
+                height={400}
+                className="w-full h-full object-cover transform group-hover:scale-110 transition duration-500"
+              />
+
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition duration-500"></div>
+
+              {/* Info (Bottom Slide Up) */}
+              <div className="absolute bottom-0 left-0 w-full px-4 py-3 text-white translate-y-full group-hover:translate-y-0 transition-all duration-500">
+                <h3 className="text-lg font-semibold">{item.name}</h3>
+                <span className="text-sm font-medium">${item.price}</span>
               </div>
+            </Link>
+          </div>
+
             </SwiperSlide>
           ))}
         </Swiper>

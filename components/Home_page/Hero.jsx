@@ -54,7 +54,7 @@ const Hero = () => {
           mousewheel={true}
           keyboard={true}
           modules={[Navigation, Pagination, Mousewheel, Keyboard]}
-          className="mySwiper h-[500px] md:h-[450px] xl:h-[600px]"
+          className="mySwiper h-[500px] md:h-[450px] xl:h-[545px]"
         >
           {slidesData.map((slide) => (
             <SwiperSlide
