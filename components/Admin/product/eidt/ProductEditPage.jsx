@@ -9,6 +9,9 @@ import { toast } from "react-toastify";
 import { Loader2, X } from "lucide-react";
 
 export default function EditProductPage({ product }) {
+
+  console.log(product)
+
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -16,8 +19,10 @@ export default function EditProductPage({ product }) {
   const [oldImages, setOldImages] = useState(product?.images || []);
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [childCategories, setChildCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(product?.category?._id || "");
   const [selectedSubcategory, setSelectedSubcategory] = useState(product?.subcategory?._id || "");
+  const [selectedChildcategory, setSelectedChildcategory] = useState(product?.childcategory?._id || "");
   const [variants, setVariants] = useState(
     product?.variants?.length
       ? product.variants.map((v) => ({
@@ -29,6 +34,9 @@ export default function EditProductPage({ product }) {
         }))
       : []
   );
+
+  console.log(childCategories)
+  console.log(selectedChildcategory)
 
   // Load categories
   useEffect(() => {
@@ -46,6 +54,15 @@ export default function EditProductPage({ product }) {
       .then((data) => setSubcategories(data.data || []))
       .catch(console.error);
   }, [selectedCategory]);
+  // load childcategory when Subcategory Chnages
+useEffect(() => {
+  if (!selectedSubcategory) return; // note: it should match your state
+  fetch(`/api/childcategory?subcategory=${selectedSubcategory}`)
+    .then((res) => res.json())
+    .then((data) => setChildCategories(data.data || []))
+    .catch(console.error);
+}, [selectedSubcategory]);
+
 
   // Handlers
   const handleMainImageChange = (e) => setMainImages([...mainImages, ...Array.from(e.target.files)]);
@@ -87,6 +104,7 @@ export default function EditProductPage({ product }) {
 
     formData.append("category", selectedCategory);
     formData.append("subcategory", selectedSubcategory);
+    formData.append("childcategory", selectedChildcategory);
     mainImages.forEach((file) => formData.append("images", file));
     formData.append("oldImages", JSON.stringify(oldImages));
 
@@ -140,7 +158,7 @@ export default function EditProductPage({ product }) {
             </div>
             <Textarea name="desc" placeholder="Full Description" className="h-28" defaultValue={product.desc || ""} />
             {/* Category & Subcategory */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <select value={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubcategory(""); }} className="border rounded-lg p-2" required>
                 <option value="">Select Category</option>
                 {categories.map((cat) => <option key={cat._id} value={cat._id}>{cat.name}</option>)}
@@ -148,6 +166,10 @@ export default function EditProductPage({ product }) {
               <select value={selectedSubcategory} onChange={(e) => setSelectedSubcategory(e.target.value)} className="border rounded-lg p-2" required>
                 <option value="">Select SubCategory</option>
                 {subcategories.map((sub) => <option key={sub._id} value={sub._id}>{sub.name}</option>)}
+              </select>
+              <select value={selectedChildcategory} onChange={(e) => setSelectedChildcategory(e.target.value)} className="border rounded-lg p-2" required>
+                <option value="">Select ChildCategory</option>
+                {childCategories.map((sub) => <option key={sub._id} value={sub._id}>{sub.name}</option>)}
               </select>
             </div>
             {/* Pricing & Stock */}

@@ -4,6 +4,7 @@ import Link from "next/link"; // ✅ Import Link
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/model/Category";
 import FeatureCategory from "./Featured/FeatureCategory";
+import { Suspense } from "react";
 
 async function getAllCategory() {
   await connectDB();
@@ -22,7 +23,9 @@ const FeaturedCategory = async () => {
     <div className="container mx-auto">
         <h3 className="text-[35px] font-semibold text-black mb-5">Feature Category</h3>
     <div>
-        <FeatureCategory categories={categories}/>
+     <Suspense fallback={<>Getting Data...</>}>
+         <FeatureCategory categories={categories}/>
+     </Suspense>
     </div>
     </div>
   );

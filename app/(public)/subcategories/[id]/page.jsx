@@ -20,10 +20,6 @@ const page = ({params}) => {
   
   const {id} =  params;
 
-  
-
-
-
 
    return (
      <div className="container mx-auto min-h-screen p-6">

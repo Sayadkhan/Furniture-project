@@ -12,6 +12,8 @@ export default function AddProductForm({ categories }) {
   const [mainImages, setMainImages] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [selectedChildcategory, setSelectedChildcategory] = useState("");
+
 
   const [variants, setVariants] = useState([
     {
@@ -78,6 +80,7 @@ export default function AddProductForm({ categories }) {
 
     formData.append("category", selectedCategory);
     formData.append("subcategory", selectedSubcategory);
+    formData.append("childcategory", selectedChildcategory)
 
     mainImages.forEach((file) => {
       formData.append("images", file);
@@ -144,12 +147,15 @@ export default function AddProductForm({ categories }) {
           <Textarea name="desc" placeholder="Full Description" className="h-28" />
 
           {/* Category + Subcategory */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Category + Subcategory + Childcategory */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Category */}
             <select
               value={selectedCategory}
               onChange={(e) => {
                 setSelectedCategory(e.target.value);
                 setSelectedSubcategory("");
+                setSelectedChildcategory("");
               }}
               className="border rounded-lg p-2"
               required
@@ -161,11 +167,17 @@ export default function AddProductForm({ categories }) {
                 </option>
               ))}
             </select>
+
+            {/* SubCategory */}
             <select
               value={selectedSubcategory}
-              onChange={(e) => setSelectedSubcategory(e.target.value)}
+              onChange={(e) => {
+                setSelectedSubcategory(e.target.value);
+                setSelectedChildcategory("");
+              }}
               className="border rounded-lg p-2"
               required
+              disabled={!selectedCategory}
             >
               <option value="">Select SubCategory</option>
               {categories
@@ -176,8 +188,26 @@ export default function AddProductForm({ categories }) {
                   </option>
                 ))}
             </select>
-          </div>
 
+            {/* ChildCategory */}
+            <select
+              value={selectedChildcategory}
+              onChange={(e) => setSelectedChildcategory(e.target.value)}
+              className="border rounded-lg p-2"
+              required
+              disabled={!selectedSubcategory}
+            >
+              <option value="">Select ChildCategory</option>
+              {categories
+                .find((c) => c._id === selectedCategory)
+                ?.subcategories.find((s) => s._id === selectedSubcategory)
+                ?.childcategories.map((child) => (
+                  <option key={child._id} value={child._id}>
+                    {child.name}
+                  </option>
+                ))}
+            </select>
+          </div>
           {/* Base Pricing & Stock */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Input name="price" type="number" placeholder="Base Price" min="0" required />

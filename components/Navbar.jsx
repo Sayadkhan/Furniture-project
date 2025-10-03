@@ -2,85 +2,51 @@
 
 import { connectDB } from '@/lib/mongodb';
 import Category from '@/model/Category';
+import ChildCategory from '@/model/ChildCategory';
 import SubCategory from '@/model/SubCategory';
 import Link from 'next/link'
+import NavbarClinet from './NavbarClinet';
+import { Suspense } from 'react';
 
 
 async function getAllCategoryWithSub() {
   await connectDB();
 
-  const categories = await Category.find({})
-    .sort({ createdAt: -1 })
-    .lean();
-
-  // fetch subcategories for each category
-  const categoriesWithSub = await Promise.all(
+  const categories = await Category.find({}).sort({ createdAt: -1 }).lean();
+  const categoriesWithSubAndChild = await Promise.all(
     categories.map(async (cat) => {
-      const subcategories = await SubCategory.find({ category: cat._id }).lean();
-      return { ...cat, subcategories };
+      const subcategories = await SubCategory.find({
+        category: cat._id,
+      }).lean();
+
+      // attach child categories to each subcategory
+      const subcategoriesWithChild = await Promise.all(
+        subcategories.map(async (sub) => {
+          const childcategories = await ChildCategory.find({
+            subcategory: sub._id,
+          }).lean();
+          return { ...sub, childcategories };
+        })
+      );
+
+      return { ...cat, subcategories: subcategoriesWithChild };
     })
   );
 
-  return JSON.parse(JSON.stringify(categoriesWithSub));
+  return JSON.parse(JSON.stringify(categoriesWithSubAndChild));
 }
+
 
 const Navbar = async () => {
   const categories = await getAllCategoryWithSub();
 
-  return (
-    <div className=" text-white  px-0 sticky top-0 z-[5000] shadow-md">
-      <div className="">
-        <div className="bg-gray-100 px-3 py-3 flex items-center justify-center text-sm">
-          {/* -------middle-menu--------- */}
-          <div className="text-black hidden xl:flex gap-[35px]">
-            {categories.map((cat) => (
-              <div key={cat._id} className="relative group">
-                <Link
-                  href={`/categories/${cat._id}`}
-                  className="text-[18px] font-medium"
-                >
-                  {cat.name}
-                </Link>
 
-                {/* Subcategory Mega Menu */}
-                {cat.subcategories.length > 0 && (
-                  <div className="absolute top-full left-0 mt-2 w-[600px] bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-6">
-                    <div className="grid grid-cols-3 gap-6">
-                      {cat.subcategories.map((sub) => (
-                        <Link
-                          key={sub._id}
-                          href={`/subcategories/${sub._id}`}
-                          className="flex items-center gap-3 hover:bg-gray-100 p-2 rounded-lg"
-                        >
-                          {/* optional image */}
-                          {sub.image && (
-                            <img
-                              src={sub.image}
-                              alt={sub.name}
-                              className="w-12 h-12 object-cover rounded-md"
-                            />
-                          )}
-                          <div>
-                            <h4 className="text-gray-800 font-medium">
-                              {sub.name}
-                            </h4>
-                            {sub.desc && (
-                              <p className="text-sm text-gray-500 line-clamp-2">
-                                {sub.desc}
-                              </p>
-                            )}
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+
+
+  return (
+<Suspense>
+      <NavbarClinet categories={categories}/>
+</Suspense>
   );
 };
 

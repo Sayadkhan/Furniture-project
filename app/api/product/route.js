@@ -98,6 +98,7 @@ export async function POST(req) {
       discount: Number(formData.get("discount") || 0),
       discountType: formData.get("discountType") || "percentage",
       category: formData.get("category"),
+      childcategory: formData.get("childcategory"),
       subcategory: formData.get("subcategory"),
       tags: formData.get("tags") ? formData.get("tags").split(",") : [],
       images: imageUrls,

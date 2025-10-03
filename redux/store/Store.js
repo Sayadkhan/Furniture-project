@@ -1,12 +1,15 @@
 "use client";
 import { configureStore } from "@reduxjs/toolkit";
 import cartSlice from "../slice/CartSlice";
+import filterSlice from "../slice/filterSlice";
+
 let store;
 
 export function makeStore() {
   return configureStore({
     reducer: {
       cart: cartSlice,
+      filters: filterSlice,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

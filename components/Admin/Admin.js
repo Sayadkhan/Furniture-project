@@ -43,6 +43,14 @@ const sidebarLinks = [
     ],
   },
   {
+    label: "Childcategories",
+    icon: Layers,
+    children: [
+      { href: "/admin/childcategory/all", label: "All childcategory" },
+      { href: "/admin/childcategory/add", label: "Add childcategory" },
+    ],
+  },
+  {
     label: "Coupons",
     icon: Ticket,
     children: [

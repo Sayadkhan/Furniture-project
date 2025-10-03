@@ -33,6 +33,11 @@ const ProductSchema = new mongoose.Schema(
       ref: "SubCategory",
     },
 
+    childcategory: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ChildCategory",
+    },
+
     tags: [{ type: String }],
 
     images: [{ type: String }],

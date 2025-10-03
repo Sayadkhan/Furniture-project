@@ -13,6 +13,7 @@ async function getProduct(id) {
   })
     .populate("category", "name")
     .populate("subcategory", "name")
+    .populate("childcategory", "name")
     .lean();
 
   console.log(product);
