@@ -1,33 +1,12 @@
-import ChildCategoryPage from '@/components/Admin/ChildCategory/ChildCtegoryTable';
-import { connectDB } from '@/lib/mongodb';
-import ChildCategory from '@/model/ChildCategory';
 import React, { Suspense } from 'react'
+import AllChild from './AllChild'
 
-
-
-
- async function getAllChildCategory() {
-  await connectDB();
-
-    const childCategories = await ChildCategory.find({})
-      .populate("category", "name")      
-      .populate("subcategory", "name"); 
-
-  return JSON.parse(JSON.stringify(childCategories));
-}
-
-const page = async () => {
-
-
-const data = await getAllChildCategory()
-
-
-
+const page = () => {
   return (
     <div>
-  <Suspense>
-        <ChildCategoryPage data={data}/>
-  </Suspense>
+      <Suspense fallback={<>loading...</>}>
+        <AllChild/>
+      </Suspense>
     </div>
   )
 }

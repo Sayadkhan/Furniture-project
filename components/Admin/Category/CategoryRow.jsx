@@ -3,7 +3,7 @@ import { TableRow, TableCell } from "@/components/ui/table";
 import Image from "next/image";
 import CategoryActions from "./CategoryActions";
 
-export default async function CategoryRow({ category, index, onDelete }) {
+export default function CategoryRow({ category, index, onDelete }) {
   return (
     <TableRow className="hover:bg-muted/20 transition-colors">
       <TableCell className="text-center font-medium">{index + 1}</TableCell>

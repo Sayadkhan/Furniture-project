@@ -1,28 +1,11 @@
-import AllsubcategoryTable from "@/components/Admin/Subcategory/AllsubcategoryTable";
-import { connectDB } from "@/lib/mongodb";
-import SubCategory from "@/model/SubCategory";
-import Category from "@/model/Category";
 import React, { Suspense } from "react";
+import AllSubCategory from "./AllsubCategory";
 
-async function getAllCategory() {
-  await connectDB();
-  const categories = await SubCategory.find({})
-    .populate("category", "name")
-    .sort({ createdAt: -1 })
-    .lean();
-
-  return JSON.parse(JSON.stringify(categories));
-}
-
-export const dynamic = "force-dynamic";
-
-const page = async () => {
-  const category = await getAllCategory();
-
+const page = () => {
   return (
     <div>
-      <Suspense fallback={<>Loading subcategory.....</>}>
-        <AllsubcategoryTable subcategories={category} />
+      <Suspense fallback={<>Loading data....</>}>
+        <AllSubCategory />
       </Suspense>
     </div>
   );
