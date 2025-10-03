@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 
 export default function AddChildCategoryPage({ categorySubcategory }) {
 
+  console.log(categorySubcategory)
+
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
 

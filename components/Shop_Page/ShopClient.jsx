@@ -269,9 +269,11 @@ export default function ShopClient({ products, categories, subCategories, childC
       </aside>
 
       {/* Product Grid */}
-      <main className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 h-[368px]">
         {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => <ShopCard key={product._id} product={product} />)
+          filteredProducts.map((product) => (
+            <ShopCard key={product._id} product={product} />
+          ))
         ) : (
           <p className="col-span-full text-center text-gray-500">
             No products found.

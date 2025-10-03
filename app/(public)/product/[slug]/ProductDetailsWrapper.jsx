@@ -8,13 +8,17 @@ import Product from "@/model/Product";
 export const dynamic = 'force-dynamic';
 
 
-export default async function ProductDetailsWrapper({ slug }) {
+export default async function ProductDetailsWrapper({ id }) {
+
+  console.log(id)
   await connectDB();
 
-  const product = await Product.findOne({ slug })
+  const product = await Product.findById({ id })
     .populate("category", "name")
     .populate("subcategory", "name")
     .lean();
+
+    console.log(product)
 
   if (!product) return <p>Product not found.</p>;
 

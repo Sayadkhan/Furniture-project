@@ -20,8 +20,12 @@ import SubCategory from '@/model/SubCategory';
   return JSON.parse(JSON.stringify(categoriesWithSub));
 }
 
+export const dynamic = 'force-dynamic';
+
 const page = async () => {
   const categorySubcategory = await getAllCategoryWithSub()
+
+
   return (
     <div>
       <AddChildCategoryPage categorySubcategory={categorySubcategory}/>
