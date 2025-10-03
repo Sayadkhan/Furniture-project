@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -129,11 +129,22 @@ function SidebarItem({ item, pathname, isOpen, toggleMenu }) {
 
 export default function Admin({ children }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [openMenus, setOpenMenus] = useState({});
   const [profileOpen, setProfileOpen] = useState(false);
 
   const toggleMenu = (label) =>
     setOpenMenus((prev) => ({ ...prev, [label]: !prev[label] }));
+
+  // ✅ Logout handler
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/logout", { method: "POST" });
+      router.push("/admin/login"); // redirect to login
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   // Check if it's the login page
   const isLoginPage = pathname === "/admin/login";
@@ -164,7 +175,10 @@ export default function Admin({ children }) {
         </nav>
 
         <div className="p-4 border-t">
-          <button className="flex items-center gap-3 text-red-600 hover:text-red-800 transition">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 text-red-600 hover:text-red-800 transition"
+          >
             <LogOut size={18} />
             Logout
           </button>
@@ -200,9 +214,14 @@ export default function Admin({ children }) {
                 >
                   <User size={16} /> Profile
                 </Link>
-                <button className="w-full flex items-center gap-2 px-4 py-2 text-sm text-left hover:bg-gray-100 text-red-600">
-                  <LogOut size={16} /> Logout
-                </button>
+                <div className="w-full bg-red-600 py-3 px-5">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-2 px-4 py-2 text-sm text-left hover:bg-gray-100 text-red-600"
+                  >
+                    <LogOut size={16} /> Logout
+                  </button>
+                </div>
               </div>
             )}
           </div>

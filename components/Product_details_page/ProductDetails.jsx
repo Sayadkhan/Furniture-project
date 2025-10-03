@@ -210,9 +210,9 @@ const ProductDetails = ({ product, userId }) => {
                 >
                   Add To Cart
                 </button>
-                <button className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800">
+                {/* <button className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800">
                   Buy Now
-                </button>
+                </button> */}
               </div>
 
               {/* Wishlist + Compare */}
