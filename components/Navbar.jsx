@@ -37,6 +37,9 @@ async function getAllCategoryWithSub() {
 }
 
 
+export const dynamic = 'force-dynamic';
+
+
 const Navbar = async () => {
   const categories = await getAllCategoryWithSub();
 

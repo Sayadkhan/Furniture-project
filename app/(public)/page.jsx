@@ -36,7 +36,7 @@ export default function Home() {
     </Suspense>
 
       
-        <Suspense fallback={<p>Loading categorywise product....</p>}>
+      <Suspense fallback={<p>Loading categorywise product....</p>}>
         <PopularBrands />
       </Suspense>
    </>
