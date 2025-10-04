@@ -37,7 +37,7 @@ const CategoryProduct = ({ categoryWiseProducts }) => {
                 </p>
                 <Link
                   href={`/categories/${category._id}`}
-                  className="inline-block bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 sm:px-5 sm:py-2 rounded-lg font-medium transition"
+                  className="inline-block bg-black hover:bg-white text-white hover:text-black px-4 py-2 sm:px-5 sm:py-2 rounded-lg font-medium transition duration-300"
                 >
                   Shop Now
                 </Link>

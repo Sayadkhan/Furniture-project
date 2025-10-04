@@ -23,7 +23,7 @@ const TopNavbar = () => {
         
                 <div className="text-white jost font-medium jost_font text-center lg:mt-0 mt-1">
                     Summer Sale 15% off!{' '}
-                    <Link href="" className="underline hover:text-red-500 jost_font">
+                    <Link href="/shop" className="underline hover:text-red-500 jost_font">
                     Shop Now!
                     </Link>
                 </div>

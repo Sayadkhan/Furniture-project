@@ -8,7 +8,7 @@ const ShopCard = ({product}) => {
   return (
     <div>
         <Card key={product._id} className="shadow-md rounded-lg">
-            <div className="w-96 h-[200px] mb-3">
+            <div className="h-[200px] mb-3">
                 <Image className='w-full h-full object-cover' src={product.images[0]} width={400} height={400} alt='' />
             </div>
             <CardHeader>

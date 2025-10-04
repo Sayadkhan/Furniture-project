@@ -25,58 +25,78 @@ const NavbarClient = ({ categories }) => {
   };
 
   return (
-    <div className=" text-white px-0 sticky top-0 z-[30] shadow-md">
-      <div className="">
-        <div className="bg-gray-100 px-3 py-3 flex items-center justify-center text-sm">
-          <div className="text-black hidden xl:flex gap-[35px]">
-            {categories.slice(0, 5).map((cat) => (
-              <div key={cat._id} className="relative group cursor-pointer">
-                <button
-                  onClick={() => handleCategoryClick(cat._id)}
-                  className="text-[18px] font-medium"
-                >
-                  {cat.name}
-                </button>
+    <div className="sticky top-0 z-30 shadow-md bg-gray-100">
+      <div className="px-3 py-3 flex items-center justify-center text-sm">
+        <div className="hidden xl:flex gap-8 text-black">
+          {categories.slice(0, 5).map((cat) => (
+            <div key={cat._id} className="relative group cursor-pointer">
+              <button
+                onClick={() => handleCategoryClick(cat._id)}
+                className="text-[18px] font-medium hover:text-gray-800 transition cursor-pointer"
+              >
+                {cat.name}
+              </button>
 
-                {/* Subcategory Mega Menu */}
-                {cat.subcategories.length > 0 && (
-                  <div className="absolute top-full left-0 mt-2 w-[700px] bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-6">
-                    <div className="grid grid-cols-3 gap-6">
-                      {cat.subcategories.map((sub) => (
-                        <div key={sub._id}>
-                          <h4
-                            className="text-gray-900 font-bold mb-2 cursor-pointer"
-                            onClick={() => handleSubCategoryClick(sub._id)}
-                          >
-                            {sub.name}
-                          </h4>
+              {/* Subcategory Mega Menu */}
+              {cat.subcategories.length > 0 && (
+                <div className="absolute top-full left-0 mt-2 w-[700px] bg-white shadow-lg rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-6">
+                  <div className="grid grid-cols-3 gap-6">
+                    {cat.subcategories.slice(0, 4).map((sub) => (
+                      <div key={sub._id}>
+                        <h4
+                          className="text-gray-900 font-bold mb-2 cursor-pointer hover:text-gray-700 transition"
+                          onClick={() => handleSubCategoryClick(sub._id)}
+                        >
+                          {sub.name}
+                        </h4>
 
-                          <ul className="space-y-1">
-                            {sub.childcategories?.map((child) => (
-                              <li key={child._id}>
-                                <button
-                                  onClick={() => handleChildCategoryClick(child._id)}
-                                  className="text-gray-600 hover:text-black text-sm cursor-pointer"
-                                >
-                                  {child.name}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+                        <ul className="space-y-1">
+                          {sub.childcategories?.slice(0, 5).map((child) => (
+                            <li key={child._id}>
+                              <button
+                                onClick={() => handleChildCategoryClick(child._id)}
+                                className="text-gray-600 hover:text-black text-sm cursor-pointer transition"
+                              >
+                                {child.name}
+                              </button>
+                            </li>
+                          ))}
+                          {sub.childcategories?.length > 5 && (
+                            <li>
+                              <Link
+                                href="/shop"
+                                className="text-blue-600 text-sm hover:underline"
+                              >
+                                More
+                              </Link>
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+                    ))}
 
+                    {/* More Categories Button */}
+                    <div className="flex items-center justify-center col-span-1">
+                      <Link
+                        href="/shop"
+                        className="px-4 py-2 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 transition"
+                      >
+                        More
+                      </Link>
                     </div>
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+              )}
+            </div>
+          ))}
 
-            
-          <Link href={"/shop"} className="underline">
-              More
+          {/* General More Link */}
+          <Link
+            href="/shop"
+            className="text-[18px] font-medium hover:text-gray-800 transition cursor-pointer text-blue-600 underline"
+          >
+            More
           </Link>
-          </div>
         </div>
       </div>
     </div>
