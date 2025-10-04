@@ -1,10 +1,7 @@
 "use client";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useMemo, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input"; // ✅ Add Input from your UI
 import ShopCard from "./ShopCard";
 import {
   clearFilters,
@@ -12,7 +9,10 @@ import {
   toggleSubCategory,
   toggleChildCategory,
 } from "@/redux/slice/filterSlice";
-import { ChevronDown, ChevronRight, X } from "lucide-react";
+import { X, ChevronDown, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function ShopClient({ products, categories, subCategories, childCategories }) {
   const { categoryIds, subCategoryIds, childCategoryIds } = useSelector(
@@ -25,42 +25,21 @@ export default function ShopClient({ products, categories, subCategories, childC
     subCategories: true,
     childCategories: true,
   });
-  const [allOpen, setAllOpen] = useState(true);
-  const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const [filterDrawer, setFilterDrawer] = useState(false);
 
-  // ✅ Search states
+  // Search states
   const [searchCat, setSearchCat] = useState("");
   const [searchSub, setSearchSub] = useState("");
   const [searchChild, setSearchChild] = useState("");
 
-  const toggleSection = (key) => {
-    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+  // Sort & price filter
+  const [sortOption, setSortOption] = useState("default");
+  const [priceRange, setPriceRange] = useState([0, 1000]); // min-max price
 
-  const toggleAll = () => {
-    const newState = !allOpen;
-    setOpenSections({
-      categories: newState,
-      subCategories: newState,
-      childCategories: newState,
-    });
-    setAllOpen(newState);
-  };
+  const toggleSection = (section) =>
+    setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      const matchCategory =
-        categoryIds.length === 0 || categoryIds.includes(product.category._id);
-      const matchSubCategory =
-        subCategoryIds.length === 0 || subCategoryIds.includes(product.subcategory._id);
-      const matchChildCategory =
-        childCategoryIds.length === 0 ||
-        (product.childcategory && childCategoryIds.includes(product.childcategory._id));
-      return matchCategory && matchSubCategory && matchChildCategory;
-    });
-  }, [products, categoryIds, subCategoryIds, childCategoryIds]);
-
-  // ✅ Filtering logic for searches
+  // Filtered lists
   const filteredCategories = categories.filter((c) =>
     c.name.toLowerCase().includes(searchCat.toLowerCase())
   );
@@ -71,231 +50,309 @@ export default function ShopClient({ products, categories, subCategories, childC
     ch.name.toLowerCase().includes(searchChild.toLowerCase())
   );
 
-  const FilterContent = () => (
-    <div className="space-y-6">
-      {/* Quick Actions */}
-      <div className="flex flex-col gap-3">
-        <Button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
-          onClick={() => dispatch(clearFilters())}
-        >
-          Show All Products
-        </Button>
+  // Filtered & sorted products
+  const filteredProducts = useMemo(() => {
+    let filtered = products.filter(
+      (p) =>
+        (categoryIds.length === 0 || categoryIds.includes(p.category._id)) &&
+        (subCategoryIds.length === 0 ||
+          subCategoryIds.includes(p.subcategory._id)) &&
+        (!p.childcategory ||
+          childCategoryIds.length === 0 ||
+          childCategoryIds.includes(p.childcategory._id)) &&
+        p.price >= priceRange[0] &&
+        p.price <= priceRange[1]
+    );
+
+    switch (sortOption) {
+      case "priceLow":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "priceHigh":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "nameAZ":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "nameZA":
+        filtered.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        break;
+    }
+
+    return filtered;
+  }, [products, categoryIds, subCategoryIds, childCategoryIds, priceRange, sortOption]);
+
+  // Active filter pills
+  const renderActiveFilters = () => {
+    const pills = [];
+
+    categories
+      .filter((c) => categoryIds.includes(c._id))
+      .forEach((c) =>
+        pills.push({ name: c.name, onRemove: () => dispatch(toggleCategory(c._id)) })
+      );
+    subCategories
+      .filter((s) => subCategoryIds.includes(s._id))
+      .forEach((s) =>
+        pills.push({ name: s.name, onRemove: () => dispatch(toggleSubCategory(s._id)) })
+      );
+    childCategories
+      .filter((ch) => childCategoryIds.includes(ch._id))
+      .forEach((ch) =>
+        pills.push({ name: ch.name, onRemove: () => dispatch(toggleChildCategory(ch._id)) })
+      );
+
+    return pills.length > 0 ? (
+      <div className="flex flex-wrap gap-2 mb-4">
+        {pills.map((pill, idx) => (
+          <div
+            key={idx}
+            className="flex items-center gap-1 bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full cursor-pointer hover:bg-blue-200"
+            onClick={pill.onRemove}
+          >
+            {pill.name} <X className="w-3 h-3" />
+          </div>
+        ))}
         <Button
           variant="outline"
-          className="w-full border-gray-300 text-gray-700 hover:bg-gray-100"
-          onClick={toggleAll}
+          size="sm"
+          className="ml-2 text-red-600 border-red-400 hover:bg-red-50"
+          onClick={() => dispatch(clearFilters())}
         >
-          {allOpen ? "Collapse All" : "Expand All"}
+          Clear All
         </Button>
       </div>
+    ) : null;
+  };
 
-      {/* Categories */}
-      <Card className="border border-gray-200 shadow-sm rounded-xl">
-        <CardHeader
-          className="flex items-center justify-between cursor-pointer py-2"
-          onClick={() => toggleSection("categories")}
-        >
-          <CardTitle className="text-base font-semibold">
-            Categories{" "}
-            {categoryIds.length > 0 && (
-              <span className="ml-2 text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">
-                {categoryIds.length}
-              </span>
-            )}
-          </CardTitle>
-          {openSections.categories ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronRight className="w-5 h-5 text-gray-500" />
-          )}
-        </CardHeader>
-        {openSections.categories && (
-          <CardContent className="space-y-3">
-            <Input
-              placeholder="Search categories..."
-              value={searchCat}
-              onChange={(e) => setSearchCat(e.target.value)}
-              className="text-sm"
-            />
-            <div className="max-h-48 overflow-y-auto divide-y">
-              {filteredCategories.length > 0 ? (
-                filteredCategories.map((cat) => (
-                  <label
-                    key={cat._id}
-                    className="flex items-center gap-2 py-2 px-1 cursor-pointer hover:bg-gray-50 rounded-md transition"
-                  >
-                    <Checkbox
-                      checked={categoryIds.includes(cat._id)}
-                      onCheckedChange={() => dispatch(toggleCategory(cat._id))}
-                    />
-                    <span className="text-sm">{cat.name}</span>
-                  </label>
-                ))
-              ) : (
-                <p className="text-xs text-gray-400 px-2 py-2">No match found</p>
-              )}
-            </div>
-          </CardContent>
-        )}
-      </Card>
-
-      {/* Subcategories */}
-      <Card className="border border-gray-200 shadow-sm rounded-xl">
-        <CardHeader
-          className="flex items-center justify-between cursor-pointer py-2"
-          onClick={() => toggleSection("subCategories")}
-        >
-          <CardTitle className="text-base font-semibold">
-            Subcategories{" "}
-            {subCategoryIds.length > 0 && (
-              <span className="ml-2 text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">
-                {subCategoryIds.length}
-              </span>
-            )}
-          </CardTitle>
-          {openSections.subCategories ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronRight className="w-5 h-5 text-gray-500" />
-          )}
-        </CardHeader>
-        {openSections.subCategories && (
-          <CardContent className="space-y-3">
-            <Input
-              placeholder="Search subcategories..."
-              value={searchSub}
-              onChange={(e) => setSearchSub(e.target.value)}
-              className="text-sm"
-            />
-            <div className="max-h-48 overflow-y-auto divide-y">
-              {filteredSubCategories.length > 0 ? (
-                filteredSubCategories.map((sub) => (
-                  <label
-                    key={sub._id}
-                    className="flex items-center gap-2 py-2 px-1 cursor-pointer hover:bg-gray-50 rounded-md transition"
-                  >
-                    <Checkbox
-                      checked={subCategoryIds.includes(sub._id)}
-                      onCheckedChange={() => dispatch(toggleSubCategory(sub._id))}
-                    />
-                    <span className="text-sm">{sub.name}</span>
-                  </label>
-                ))
-              ) : (
-                <p className="text-xs text-gray-400 px-2 py-2">No match found</p>
-              )}
-            </div>
-          </CardContent>
-        )}
-      </Card>
-
-      {/* Child Categories */}
-      <Card className="border border-gray-200 shadow-sm rounded-xl">
-        <CardHeader
-          className="flex items-center justify-between cursor-pointer py-2"
-          onClick={() => toggleSection("childCategories")}
-        >
-          <CardTitle className="text-base font-semibold">
-            Child Categories{" "}
-            {childCategoryIds.length > 0 && (
-              <span className="ml-2 text-xs px-2 py-0.5 bg-blue-100 text-blue-600 rounded-full">
-                {childCategoryIds.length}
-              </span>
-            )}
-          </CardTitle>
-          {openSections.childCategories ? (
-            <ChevronDown className="w-5 h-5 text-gray-500" />
-          ) : (
-            <ChevronRight className="w-5 h-5 text-gray-500" />
-          )}
-        </CardHeader>
-        {openSections.childCategories && (
-          <CardContent className="space-y-3">
-            <Input
-              placeholder="Search child categories..."
-              value={searchChild}
-              onChange={(e) => setSearchChild(e.target.value)}
-              className="text-sm"
-            />
-            <div className="max-h-48 overflow-y-auto divide-y">
-              {filteredChildCategories.length > 0 ? (
-                filteredChildCategories.map((child) => (
-                  <label
-                    key={child._id}
-                    className="flex items-center gap-2 py-2 px-1 cursor-pointer hover:bg-gray-50 rounded-md transition"
-                  >
-                    <Checkbox
-                      checked={childCategoryIds.includes(child._id)}
-                      onCheckedChange={() => dispatch(toggleChildCategory(child._id))}
-                    />
-                    <span className="text-sm">{child.name}</span>
-                  </label>
-                ))
-              ) : (
-                <p className="text-xs text-gray-400 px-2 py-2">No match found</p>
-              )}
-            </div>
-          </CardContent>
-        )}
-      </Card>
-
-      {/* Reset */}
-      <Button
-        variant="outline"
-        className="w-full border-red-300 text-red-600 hover:bg-red-50"
-        onClick={() => dispatch(clearFilters())}
+  const FilterSection = ({
+    title,
+    items,
+    selectedIds,
+    toggleAction,
+    searchValue,
+    setSearch,
+  }) => (
+    <div className="mb-4 border-b border-gray-200 pb-2">
+      <button
+        className="flex justify-between items-center w-full font-medium text-gray-700 mb-1 hover:text-blue-600 transition"
+        onClick={() => toggleSection(title)}
       >
-        Clear Filters
-      </Button>
+        <span className="capitalize">{title}</span>
+        {selectedIds.length > 0 && (
+          <span className="text-sm text-blue-600">({selectedIds.length})</span>
+        )}
+        {openSections[title] ? <ChevronDown /> : <ChevronRight />}
+      </button>
+      {openSections[title] && (
+        <div className="space-y-1">
+          <Input
+            placeholder={`Search ${title.toLowerCase()}...`}
+            value={searchValue}
+            onChange={(e) => setSearch(e.target.value)}
+            className="mb-2 text-sm"
+          />
+          <div className="max-h-44 overflow-y-auto space-y-1">
+            {items.length > 0 ? (
+              items.map((item) => (
+                <label
+                  key={item._id}
+                  className="flex items-center gap-2 cursor-pointer text-sm hover:bg-gray-50 p-1 rounded transition"
+                >
+                  <Checkbox
+                    checked={selectedIds.includes(item._id)}
+                    onCheckedChange={() => dispatch(toggleAction(item._id))}
+                  />
+                  {item.name}
+                </label>
+              ))
+            ) : (
+              <p className="text-xs text-gray-400 px-1">No match found</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 
   return (
-    <div className="container mx-auto min-h-screen px-4 py-8 flex flex-col md:flex-row gap-6">
-      {/* Mobile trigger */}
-      <div className="md:hidden mb-4">
-        <Button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
-          onClick={() => setFilterModalOpen(true)}
-        >
-          Filters
+    <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-6">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:block md:w-1/4 sticky top-4 self-start space-y-4">
+        <Button className="w-full mb-2" onClick={() => dispatch(clearFilters())}>
+          Clear Filters
         </Button>
-      </div>
 
-      {/* Sidebar */}
-      <aside className="hidden md:block md:w-[22%] sticky top-4 self-start">
-        <FilterContent />
+        {/* Price Filter */}
+        <div className="mb-4 border-b border-gray-200 pb-2">
+          <span className="font-medium text-gray-700 mb-1 block">Price Range</span>
+          <div className="flex gap-2 items-center">
+            <Input
+              type="number"
+              value={priceRange[0]}
+              min={0}
+              onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+              className="text-sm"
+            />
+            <span>-</span>
+            <Input
+              type="number"
+              value={priceRange[1]}
+              min={0}
+              onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+              className="text-sm"
+            />
+          </div>
+        </div>
+
+        {/* Sort By */}
+        <div className="mb-4 border-b border-gray-200 pb-2">
+          <span className="font-medium text-gray-700 mb-1 block">Sort By</span>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="w-full text-sm p-1 border rounded"
+          >
+            <option value="default">Default</option>
+            <option value="priceLow">Price: Low → High</option>
+            <option value="priceHigh">Price: High → Low</option>
+            <option value="nameAZ">Name: A → Z</option>
+            <option value="nameZA">Name: Z → A</option>
+          </select>
+        </div>
+
+        <FilterSection
+          title="categories"
+          items={filteredCategories}
+          selectedIds={categoryIds}
+          toggleAction={toggleCategory}
+          searchValue={searchCat}
+          setSearch={setSearchCat}
+        />
+        <FilterSection
+          title="subCategories"
+          items={filteredSubCategories}
+          selectedIds={subCategoryIds}
+          toggleAction={toggleSubCategory}
+          searchValue={searchSub}
+          setSearch={setSearchSub}
+        />
+        <FilterSection
+          title="childCategories"
+          items={filteredChildCategories}
+          selectedIds={childCategoryIds}
+          toggleAction={toggleChildCategory}
+          searchValue={searchChild}
+          setSearch={setSearchChild}
+        />
       </aside>
 
-      {/* Product Grid */}
-      <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 h-[368px]">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <ShopCard key={product._id} product={product} />
-          ))
-        ) : (
-          <p className="col-span-full text-center text-gray-500">
-            No products found.
-          </p>
-        )}
+      {/* Product Area */}
+      <main className="flex-1">
+        {renderActiveFilters()}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((p) => <ShopCard key={p._id} product={p} />)
+          ) : (
+            <p className="col-span-full text-center text-gray-500 mt-4">
+              No products found.
+            </p>
+          )}
+        </div>
       </main>
 
       {/* Mobile Filter Drawer */}
-      {filterModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex">
-          <div className="w-4/5 max-w-sm bg-white h-full p-6 overflow-y-auto shadow-xl relative animate-slideIn">
-            <Button
-              variant="ghost"
-              className="absolute top-4 right-4"
-              onClick={() => setFilterModalOpen(false)}
-            >
-              <X className="w-6 h-6" />
-            </Button>
-            <FilterContent />
+      <div className="md:hidden">
+        <Button className="w-full mb-4" onClick={() => setFilterDrawer(true)}>
+          Filters
+        </Button>
+        {filterDrawer && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex">
+            <div className="w-4/5 max-w-sm bg-white h-full p-4 overflow-y-auto shadow-lg animate-slideIn relative">
+              <Button
+                variant="ghost"
+                className="absolute top-4 right-4"
+                onClick={() => setFilterDrawer(false)}
+              >
+                <X />
+              </Button>
+
+              <Button
+                className="w-full mb-4"
+                onClick={() => dispatch(clearFilters())}
+              >
+                Clear Filters
+              </Button>
+
+              {/* Price Filter */}
+              <div className="mb-4 border-b border-gray-200 pb-2">
+                <span className="font-medium text-gray-700 mb-1 block">Price Range</span>
+                <div className="flex gap-2 items-center">
+                  <Input
+                    type="number"
+                    value={priceRange[0]}
+                    min={0}
+                    onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+                    className="text-sm"
+                  />
+                  <span>-</span>
+                  <Input
+                    type="number"
+                    value={priceRange[1]}
+                    min={0}
+                    onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+
+              {/* Sort By */}
+              <div className="mb-4 border-b border-gray-200 pb-2">
+                <span className="font-medium text-gray-700 mb-1 block">Sort By</span>
+                <select
+                  value={sortOption}
+                  onChange={(e) => setSortOption(e.target.value)}
+                  className="w-full text-sm p-1 border rounded"
+                >
+                  <option value="default">Default</option>
+                  <option value="priceLow">Price: Low → High</option>
+                  <option value="priceHigh">Price: High → Low</option>
+                  <option value="nameAZ">Name: A → Z</option>
+                  <option value="nameZA">Name: Z → A</option>
+                </select>
+              </div>
+
+              <FilterSection
+                title="categories"
+                items={filteredCategories}
+                selectedIds={categoryIds}
+                toggleAction={toggleCategory}
+                searchValue={searchCat}
+                setSearch={setSearchCat}
+              />
+              <FilterSection
+                title="subCategories"
+                items={filteredSubCategories}
+                selectedIds={subCategoryIds}
+                toggleAction={toggleSubCategory}
+                searchValue={searchSub}
+                setSearch={setSearchSub}
+              />
+              <FilterSection
+                title="childCategories"
+                items={filteredChildCategories}
+                selectedIds={childCategoryIds}
+                toggleAction={toggleChildCategory}
+                searchValue={searchChild}
+                setSearch={setSearchChild}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

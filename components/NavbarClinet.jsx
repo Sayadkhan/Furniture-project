@@ -30,7 +30,7 @@ const NavbarClient = ({ categories }) => {
         <div className="bg-gray-100 px-3 py-3 flex items-center justify-center text-sm">
           <div className="text-black hidden xl:flex gap-[35px]">
             {categories.slice(0, 5).map((cat) => (
-              <div key={cat._id} className="relative group">
+              <div key={cat._id} className="relative group cursor-pointer">
                 <button
                   onClick={() => handleCategoryClick(cat._id)}
                   className="text-[18px] font-medium"
@@ -56,7 +56,7 @@ const NavbarClient = ({ categories }) => {
                               <li key={child._id}>
                                 <button
                                   onClick={() => handleChildCategoryClick(child._id)}
-                                  className="text-gray-600 hover:text-black text-sm"
+                                  className="text-gray-600 hover:text-black text-sm cursor-pointer"
                                 >
                                   {child.name}
                                 </button>
