@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
 import { useSelector, useDispatch } from "react-redux";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import ShopCard from "./ShopCard";
 import {
   clearFilters,
@@ -27,6 +27,11 @@ export default function ShopClient({ products, categories, subCategories, childC
   });
   const [filterDrawer, setFilterDrawer] = useState(false);
 
+  const [visibleCount, setVisibleCount] = useState(9); // initially show 9 products
+
+  const toggleSection = (section) =>
+    setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
+
   // Search states
   const [searchCat, setSearchCat] = useState("");
   const [searchSub, setSearchSub] = useState("");
@@ -34,10 +39,7 @@ export default function ShopClient({ products, categories, subCategories, childC
 
   // Sort & price filter
   const [sortOption, setSortOption] = useState("default");
-  const [priceRange, setPriceRange] = useState([0, 1000]); // min-max price
-
-  const toggleSection = (section) =>
-    setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  const [priceRange, setPriceRange] = useState([0, 1000]);
 
   // Filtered lists
   const filteredCategories = categories.filter((c) =>
@@ -83,6 +85,26 @@ export default function ShopClient({ products, categories, subCategories, childC
 
     return filtered;
   }, [products, categoryIds, subCategoryIds, childCategoryIds, priceRange, sortOption]);
+
+  // Infinite Scroll Logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const bottomPosition = document.body.offsetHeight - 300; // 300px from bottom
+
+      if (scrollPosition >= bottomPosition && visibleCount < filteredProducts.length) {
+        setVisibleCount((prev) => prev + 9); // load 9 more products
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [visibleCount, filteredProducts.length]);
+
+  // Reset visibleCount when filters change
+  useEffect(() => {
+    setVisibleCount(9);
+  }, [categoryIds, subCategoryIds, childCategoryIds, priceRange, sortOption]);
 
   // Active filter pills
   const renderActiveFilters = () => {
@@ -255,13 +277,18 @@ export default function ShopClient({ products, categories, subCategories, childC
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProducts.length > 0 ? (
-            filteredProducts.map((p) => <ShopCard key={p._id} product={p} />)
+            filteredProducts.slice(0, visibleCount).map((p) => <ShopCard key={p._id} product={p} />)
           ) : (
             <p className="col-span-full text-center text-gray-500 mt-4">
               No products found.
             </p>
           )}
         </div>
+
+        {/* Optional loading indicator */}
+        {visibleCount < filteredProducts.length && (
+          <p className="text-center mt-4 text-gray-500">Scroll down to load more...</p>
+        )}
       </main>
 
       {/* Mobile Filter Drawer */}
@@ -279,7 +306,7 @@ export default function ShopClient({ products, categories, subCategories, childC
               >
                 <X />
               </Button>
-
+              {/* Filters same as desktop */}
               <Button
                 className="w-full mb-4"
                 onClick={() => dispatch(clearFilters())}
@@ -287,7 +314,7 @@ export default function ShopClient({ products, categories, subCategories, childC
                 Clear Filters
               </Button>
 
-              {/* Price Filter */}
+              {/* Price & Sort */}
               <div className="mb-4 border-b border-gray-200 pb-2">
                 <span className="font-medium text-gray-700 mb-1 block">Price Range</span>
                 <div className="flex gap-2 items-center">
@@ -309,7 +336,6 @@ export default function ShopClient({ products, categories, subCategories, childC
                 </div>
               </div>
 
-              {/* Sort By */}
               <div className="mb-4 border-b border-gray-200 pb-2">
                 <span className="font-medium text-gray-700 mb-1 block">Sort By</span>
                 <select
