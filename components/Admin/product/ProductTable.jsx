@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import Image from "next/image";
 import {
   Table,
@@ -22,6 +22,86 @@ import { Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "react-toastify";
+
+const ProductRow = ({ product, index, startIndex, loadingId, handleToggle, handleDelete }) => {
+  return (
+    <TableRow
+      key={product._id}
+      className="hover:bg-amber-50/40 transition-colors"
+    >
+      <TableCell>{startIndex + index + 1}</TableCell>
+      <TableCell>
+        {product.images?.[0] && (
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            width={70}
+            height={70}
+            className="rounded-xl object-cover shadow-sm"
+          />
+        )}
+      </TableCell>
+      <TableCell className="font-semibold text-gray-800">{product.name}</TableCell>
+      <TableCell className="text-gray-600">{product.category?.name || "—"}</TableCell>
+      <TableCell className="text-gray-900 font-semibold">${product.price}</TableCell>
+
+      {/* Switches */}
+      <TableCell>
+        <Switch
+          checked={product.featured}
+          disabled={loadingId === product._id}
+          onCheckedChange={(val) => handleToggle(product._id, "featured", val)}
+        />
+      </TableCell>
+      <TableCell>
+        <Switch
+          checked={product.newarrivable}
+          disabled={loadingId === product._id}
+          onCheckedChange={(val) => handleToggle(product._id, "newarrivable", val)}
+        />
+      </TableCell>
+      <TableCell>
+        <Switch
+          checked={product.topsell}
+          disabled={loadingId === product._id}
+          onCheckedChange={(val) => handleToggle(product._id, "topsell", val)}
+        />
+      </TableCell>
+
+      {/* Actions */}
+      <TableCell className="flex gap-2 items-center justify-center text-center">
+        <Link href={`/admin/product/edit/${product._id}`}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="flex items-center gap-1 text-blue-600 border-blue-200 hover:bg-blue-50 rounded-lg"
+          >
+            <Pencil className="w-4 h-4" /> Edit
+          </Button>
+        </Link>
+        <Button
+          size="sm"
+          variant="outline"
+          className="flex items-center gap-1 text-red-600 border-red-200 hover:bg-red-50 rounded-lg"
+          onClick={() => handleDelete(product._id)}
+        >
+          <Trash2 className="w-4 h-4" /> Delete
+        </Button>
+      </TableCell>
+    </TableRow>
+  );
+};
+
+// ✅ Skeleton Row with shimmer animation
+const ProductRowSkeleton = () => (
+  <TableRow className="animate-pulse">
+    {[...Array(9)].map((_, i) => (
+      <TableCell key={i}>
+        <div className="h-6 w-full bg-gray-200 rounded-lg animate-shimmer bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 bg-[length:200%_100%]" />
+      </TableCell>
+    ))}
+  </TableRow>
+);
 
 const ProductTable = ({ products }) => {
   const [productsData, setProductsData] = useState(products);
@@ -53,32 +133,31 @@ const ProductTable = ({ products }) => {
     }
   };
 
-const handleDelete = async (id) => {
-  const confirmDelete = confirm("Are you sure you want to delete this product?");
-  if (!confirmDelete) return;
+  const handleDelete = async (id) => {
+    const confirmDelete = confirm("Are you sure you want to delete this product?");
+    if (!confirmDelete) return;
 
-  const prevProducts = [...productsData];
-  setProductsData((prev) => prev.filter((p) => p._id !== id));
+    const prevProducts = [...productsData];
+    setProductsData((prev) => prev.filter((p) => p._id !== id));
 
-  try {
-    const res = await fetch(`/api/product/${id}`, { method: "DELETE" });
-    if (!res.ok) throw new Error("Failed to delete product");
+    try {
+      const res = await fetch(`/api/product/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed to delete product");
 
-    toast.success("✅ Product deleted successfully!");
+      toast.success("✅ Product deleted successfully!");
 
-    // Adjust current page if needed
-    const filteredProductsCount = filteredProducts.length - 1; // after delete
-    const newTotalPages = Math.ceil(filteredProductsCount / productsPerPage);
-    if (currentPage > newTotalPages && newTotalPages > 0) {
-      setCurrentPage(newTotalPages);
+      // Adjust current page if needed
+      const filteredProductsCount = filteredProducts.length - 1;
+      const newTotalPages = Math.ceil(filteredProductsCount / productsPerPage);
+      if (currentPage > newTotalPages && newTotalPages > 0) {
+        setCurrentPage(newTotalPages);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("❌ Could not delete product. Please try again.");
+      setProductsData(prevProducts);
     }
-
-  } catch (err) {
-    console.error(err);
-    toast.error("❌ Could not delete product. Please try again.");
-    setProductsData(prevProducts);
-  }
-};
+  };
 
   const filteredProducts = productsData.filter((product) => {
     const matchesSearch = product.name
@@ -147,83 +226,16 @@ const handleDelete = async (id) => {
           </TableHeader>
           <TableBody>
             {currentProducts.map((product, index) => (
-              <TableRow
-                key={product._id}
-                className="hover:bg-amber-50/40 transition-colors"
-              >
-                <TableCell>{startIndex + index + 1}</TableCell>
-                <TableCell>
-                  {product.images?.[0] && (
-                    <Image
-                      src={product.images[0]}
-                      alt={product.name}
-                      width={70}
-                      height={70}
-                      className="rounded-xl object-cover shadow-sm"
-                    />
-                  )}
-                </TableCell>
-                <TableCell className="font-semibold text-gray-800">
-                  {product.name}
-                </TableCell>
-                <TableCell className="text-gray-600">
-                  {product.category?.name || "—"}
-                </TableCell>
-                <TableCell className="text-gray-900 font-semibold">
-                  ${product.price}
-                </TableCell>
-
-                {/* Switches */}
-                <TableCell>
-                  <Switch
-                    checked={product.featured}
-                    disabled={loadingId === product._id}
-                    onCheckedChange={(val) =>
-                      handleToggle(product._id, "featured", val)
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <Switch
-                    checked={product.newarrivable}
-                    disabled={loadingId === product._id}
-                    onCheckedChange={(val) =>
-                      handleToggle(product._id, "newarrivable", val)
-                    }
-                  />
-                </TableCell>
-                <TableCell>
-                  <Switch
-                    checked={product.topsell}
-                    disabled={loadingId === product._id}
-                    onCheckedChange={(val) =>
-                      handleToggle(product._id, "topsell", val)
-                    }
-                  />
-                </TableCell>
-
-                {/* Actions */}
-                <TableCell className="flex gap-2 items-center justify-center text-center">
-                  <Link href={`/admin/product/edit/${product._id}`}>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex items-center gap-1 text-blue-600 border-blue-200 hover:bg-blue-50 rounded-lg"
-                    >
-                      <Pencil className="w-4 h-4" /> Edit
-                    </Button>
-                  </Link>
-                 <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex items-center gap-1 text-red-600 border-red-200 hover:bg-red-50 rounded-lg"
-                  onClick={() => handleDelete(product._id)}
-                >
-                  <Trash2 className="w-4 h-4" /> Delete
-                </Button>
-
-                </TableCell>
-              </TableRow>
+              <Suspense key={product._id} fallback={<ProductRowSkeleton />}>
+                <ProductRow
+                  product={product}
+                  index={index}
+                  startIndex={startIndex}
+                  loadingId={loadingId}
+                  handleToggle={handleToggle}
+                  handleDelete={handleDelete}
+                />
+              </Suspense>
             ))}
           </TableBody>
         </Table>

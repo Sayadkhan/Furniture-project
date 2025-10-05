@@ -164,6 +164,7 @@ function SidebarItem({ item, pathname, openMenus, toggleMenu, parent = null }) {
   return (
     <Link
       href={href}
+      prefetch={false}
       className={`flex items-center gap-3 px-3 py-2 rounded-lg transition
         ${
           active ? "bg-gray-900 text-white" : "text-gray-700 hover:bg-gray-100"
@@ -260,9 +261,9 @@ export default function Admin({ children }) {
 
           <div className="flex gap-5 items-center justify-center">
             <div className="flex gap-5 items-center justify-center">
-              <Link href={"/"}>
+              <a target="_blank" href={"/"}>
                 <Globe className="w-6 h-6 text-gray-700 hover:text-gray-900" />
-              </Link>
+              </a>
             </div>
 
             <div className="relative">
@@ -283,6 +284,7 @@ export default function Admin({ children }) {
               {profileOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border">
                   <Link
+                    prefetch={false}
                     href="/admin/profile"
                     className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                   >
