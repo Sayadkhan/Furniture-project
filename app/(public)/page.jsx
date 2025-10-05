@@ -17,7 +17,8 @@ export const dynamic = 'force-dynamic';
 export default function Home() {
   return (   
    <>
-      <Hero />
+  <Suspense fallback={<>Home page.....</>}>
+        <Hero />
       <CategoryIcons />
       <Suspense fallback={<p>Loading featured category...</p>}>
           <FeaturedCategory/>
@@ -39,6 +40,7 @@ export default function Home() {
       <Suspense fallback={<p>Loading categorywise product....</p>}>
         <PopularBrands />
       </Suspense>
+  </Suspense>
    </>
   );
 }

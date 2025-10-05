@@ -16,9 +16,6 @@ export default async function Page({ params }) {
       <Suspense fallback={<ProductSkeleton />}>
         <ProductDetailsWrapper slug={slug} />
       </Suspense>
-
-      {/* Tabs (stream separately) */}
-  
     </div>
   );
 }

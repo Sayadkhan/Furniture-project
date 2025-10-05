@@ -271,48 +271,31 @@ export default function ShopClient({ products, categories, subCategories, childC
         />
       </aside>
 
-      {/* Product Area */}
-      <main className="flex-1">
-        {renderActiveFilters()}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.slice(0, visibleCount).map((p) => <ShopCard key={p._id} product={p} />)
-          ) : (
-            <p className="col-span-full text-center text-gray-500 mt-4">
-              No products found.
-            </p>
-          )}
-        </div>
-
-        {/* Optional loading indicator */}
-        {visibleCount < filteredProducts.length && (
-          <p className="text-center mt-4 text-gray-500">Scroll down to load more...</p>
-        )}
-      </main>
-
+      
       {/* Mobile Filter Drawer */}
       <div className="md:hidden">
         <Button className="w-full mb-4" onClick={() => setFilterDrawer(true)}>
           Filters
         </Button>
         {filterDrawer && (
-          <div className="fixed inset-0 z-50 bg-black/40 flex">
+          <div         onClick={() => setFilterDrawer(false)} className="fixed inset-0 z-50 bg-black/40 flex">
             <div className="w-4/5 max-w-sm bg-white h-full p-4 overflow-y-auto shadow-lg animate-slideIn relative">
-              <Button
-                variant="ghost"
-                className="absolute top-4 right-4"
-                onClick={() => setFilterDrawer(false)}
-              >
-                <X />
-              </Button>
-              {/* Filters same as desktop */}
-              <Button
-                className="w-full mb-4"
-                onClick={() => dispatch(clearFilters())}
-              >
-                Clear Filters
-              </Button>
+            <div className="">
+                  <Button
+                    // variant="ghost"
+                    className="absolute top-4 right-4"
+                    onClick={() => setFilterDrawer(false)}
+                  >
+                    <X />
+                  </Button>
+                  {/* Filters same as desktop */}
+                  <Button
+                    className="w-full mb-4"
+                    onClick={() => dispatch(clearFilters())}
+                  >
+                    Clear Filters
+                  </Button>
+            </div>
 
               {/* Price & Sort */}
               <div className="mb-4 border-b border-gray-200 pb-2">
@@ -379,6 +362,27 @@ export default function ShopClient({ products, categories, subCategories, childC
           </div>
         )}
       </div>
+
+      {/* Product Area */}
+      <main className="flex-1">
+        {renderActiveFilters()}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.slice(0, visibleCount).map((p) => <ShopCard key={p._id} product={p} />)
+          ) : (
+            <p className="col-span-full text-center text-gray-500 mt-4">
+              No products found.
+            </p>
+          )}
+        </div>
+
+        {/* Optional loading indicator */}
+        {visibleCount < filteredProducts.length && (
+          <p className="text-center mt-4 text-gray-500">Scroll down to load more...</p>
+        )}
+      </main>
+
     </div>
   );
 }
