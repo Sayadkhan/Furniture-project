@@ -12,8 +12,6 @@ const ProductDetails = ({ product, userId }) => {
   const [numberCount, setNumberCount] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [isZoomed, setIsZoomed] = useState(false);
-  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
   const getDiscountedPrice = (price) => {
     if (!product?.discount || product?.discount <= 0) return price;
@@ -65,90 +63,91 @@ const ProductDetails = ({ product, userId }) => {
     );
   };
 
-  const handleMouseMove = (e) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = ((e.pageX - left) / width) * 100;
-    const y = ((e.pageY - top) / height) * 100;
-    setZoomPosition({ x, y });
-  };
-
   return (
     <div className="min-h-screen">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="container mx-auto  md:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
 
-        {/* Left: Image Gallery */}
-        <div
-          className={
-            images.length > 1
-              ? "grid grid-cols-[15%_85%] gap-2" // multiple images: thumbnails + main image
-              : "flex justify-center" // single image: center it
-          }
-        >
-          {images.length > 1 && (
-            <div className="flex flex-col gap-2 mt-3">
-              {images.map((img, idx) => (
-                <div
-                  key={idx}
-                  onClick={() => setActiveImageIndex(idx)}
-                  className={`w-20 h-20 border rounded-md overflow-hidden cursor-pointer aspect-square ${
-                    activeImageIndex === idx
-                      ? "border-blue-500 ring-2 ring-blue-300"
-                      : "border-gray-200"
-                  }`}
-                >
-                  <Image
-                    src={img}
-                    alt={product.name}
-                    width={80}
-                    height={80}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Main Image */}
+          {/* Left: Image Gallery */}
           <div
-            className={`rounded-lg overflow-hidden h-[450px] md:h-[600px] relative border border-gray-200 ${
-              images.length === 1 ? "w-full" : ""
-            }`}
+            className={
+              images.length > 1
+                ? "grid grid-cols-1 sm:grid-cols-[18%_82%] gap-3"
+                : "flex justify-center"
+            }
           >
-            {images.length > 0 ? (
-              <Image
-                src={images[activeImageIndex]}
-                alt={product?.name}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                <span className="text-gray-400">No Image</span>
+            {/* Thumbnails */}
+            {images.length > 1 && (
+              <div className="flex sm:flex-col flex-row sm:gap-2 gap-3 justify-center sm:mt-0 mt-2">
+                {images.map((img, idx) => (
+                  <div
+                    key={idx}
+                    onClick={() => setActiveImageIndex(idx)}
+                    className={`w-16 h-16 sm:w-20 sm:h-20 border rounded-md overflow-hidden cursor-pointer transition ${
+                      activeImageIndex === idx
+                        ? "border-black ring-2 ring-gray-400"
+                        : "border-gray-200 hover:border-gray-400"
+                    }`}
+                  >
+                    <Image
+                      src={img}
+                      alt={product.name}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
               </div>
             )}
+
+            {/* Main Image */}
+            <div className="relative w-full h-[350px] sm:h-[420px] md:h-[500px] lg:h-[550px] border border-gray-200 rounded-lg overflow-hidden">
+              {images.length > 0 ? (
+                <Image
+                  src={images[activeImageIndex]}
+                  alt={product?.name}
+                  fill
+                  className="object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                  <span className="text-gray-400">No Image</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
           {/* Right: Product Info */}
-          <div>
+          <div className="px-1 sm:px-2 md:px-0">
             <p className="text-gray-500 mb-1">
               Category:{" "}
-              <span className="font-medium text-gray-700">{product?.category?.name}</span>
+              <span className="font-medium text-gray-700">
+                {product?.category?.name}
+              </span>
             </p>
-            <h1 className="text-3xl font-bold">{product?.name}</h1>
+
+            <h1 className="text-2xl sm:text-3xl font-bold leading-snug">
+              {product?.name}
+            </h1>
 
             {/* Price & Rating */}
             <div className="flex items-center gap-4 mt-3 flex-wrap">
-              <span className="text-3xl font-semibold text-black">${discountedPrice}</span>
+              <span className="text-2xl sm:text-3xl font-semibold text-black">
+                ${discountedPrice}
+              </span>
               {product?.discount > 0 && (
-                <span className="line-through text-gray-400">${activePrice}</span>
+                <span className="line-through text-gray-400">
+                  ${activePrice}
+                </span>
               )}
               <div className="flex items-center gap-1 text-yellow-500">
                 {[...Array(3)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-500" />
+                  <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-500" />
                 ))}
-                <span className="text-gray-600 ml-2 text-sm">(3 reviews)</span>
+                <span className="text-gray-600 ml-1 sm:ml-2 text-sm">
+                  (3 reviews)
+                </span>
               </div>
             </div>
 
@@ -160,11 +159,15 @@ const ProductDetails = ({ product, userId }) => {
                   : "bg-red-50 text-red-700"
               }`}
             >
-              {activeStock > 0 ? `In stock: ${activeStock}` : "Out of stock!"}
+              {activeStock > 0
+                ? `In stock: ${activeStock}`
+                : "Out of stock!"}
             </div>
 
             {/* Short Description */}
-            <p className="mt-4 text-gray-700">{product?.shortDesc}</p>
+            <p className="mt-4 text-gray-700 text-sm sm:text-base leading-relaxed">
+              {product?.shortDesc}
+            </p>
 
             {/* Variants */}
             {product?.variants?.length > 0 && (
@@ -175,7 +178,7 @@ const ProductDetails = ({ product, userId }) => {
                     <button
                       key={variant._id}
                       onClick={() => handleVariantSelect(variant)}
-                      className={`flex items-center gap-2 px-4 py-2 border rounded-md transition ${
+                      className={`flex items-center gap-2 px-3 sm:px-4 py-2 border rounded-md transition text-sm sm:text-base ${
                         selectedVariant?._id === variant._id
                           ? "border-black bg-gray-100"
                           : "border-gray-300 hover:bg-gray-50"
@@ -183,12 +186,16 @@ const ProductDetails = ({ product, userId }) => {
                     >
                       <span
                         className="w-5 h-5 rounded-full border"
-                        style={{ backgroundColor: variant.attributes?.hexCode || "#ccc" }}
+                        style={{
+                          backgroundColor:
+                            variant.attributes?.hexCode || "#ccc",
+                        }}
                       ></span>
                       <span className="font-medium">
-                        {variant.attributes?.color} - {variant.attributes?.size}
+                        {variant.attributes?.color} -{" "}
+                        {variant.attributes?.size}
                       </span>
-                      <span className="text-sm text-gray-500 ml-2">
+                      <span className="text-gray-500 text-xs sm:text-sm ml-1 sm:ml-2">
                         ${variant.price} | {variant.stock} left
                       </span>
                     </button>
@@ -198,7 +205,7 @@ const ProductDetails = ({ product, userId }) => {
             )}
 
             {/* Quantity + Add To Cart */}
-            <div className="flex items-center gap-4 mt-6 flex-wrap">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-6">
               <div className="flex items-center border rounded-md">
                 <button
                   onClick={() => setNumberCount(Math.max(1, numberCount - 1))}
@@ -208,19 +215,23 @@ const ProductDetails = ({ product, userId }) => {
                 </button>
                 <span className="px-4">{numberCount}</span>
                 <button
-                  onClick={() => setNumberCount(Math.min(activeStock, numberCount + 1))}
+                  onClick={() =>
+                    setNumberCount(Math.min(activeStock, numberCount + 1))
+                  }
                   className="px-3 py-1 text-lg"
                 >
                   +
                 </button>
               </div>
+
               <button
                 onClick={handleAddToCart}
-                className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition"
+                className="bg-black text-white px-5 sm:px-6 py-2 rounded-md hover:bg-gray-800 transition text-sm sm:text-base"
               >
                 Add To Cart
               </button>
-              <button className="flex items-center gap-2 px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50 transition">
+
+              <button className="flex items-center gap-2 px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50 transition text-sm sm:text-base">
                 <Heart className="w-4 h-4" /> Wishlist
               </button>
             </div>

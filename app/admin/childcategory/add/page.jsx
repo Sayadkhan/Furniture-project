@@ -1,34 +1,12 @@
-import AddChildCategoryPage from '@/components/Admin/ChildCategory/AddChildCategoryPage'
-import { connectDB } from '@/lib/mongodb';
-import Category from '@/model/Category';
-import SubCategory from '@/model/SubCategory';
+import React, { Suspense } from 'react'
+import ChildCatAdd from './components/ChildCatAdd'
 
-
-
- async function getAllCategoryWithSub() {
-  await connectDB();
-
-  const categories = await Category.find({}).sort({ createdAt: -1 }).lean();
-
-  const categoriesWithSub = await Promise.all(
-    categories.map(async (cat) => {
-      const subcategories = await SubCategory.find({ category: cat._id }).lean();
-      return { ...cat, subcategories };
-    })
-  );
-
-  return JSON.parse(JSON.stringify(categoriesWithSub));
-}
-
-export const dynamic = 'force-dynamic';
-
-const page = async () => {
-  const categorySubcategory = await getAllCategoryWithSub()
-
-
+const page = () => {
   return (
     <div>
-      <AddChildCategoryPage categorySubcategory={categorySubcategory}/>
+      <Suspense fallback={<div className='flex items-center justify-center'>Loading the Category information.....</div>}>
+      <ChildCatAdd/>
+      </Suspense>
     </div>
   )
 }
