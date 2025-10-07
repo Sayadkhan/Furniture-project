@@ -7,7 +7,8 @@ import ProductsTabs from "./ProductsTabs";
 import { toast } from "react-toastify";
 import { addToCart } from "@/redux/slice/CartSlice";
 
-const ProductDetails = ({ product, userId }) => {
+const ProductDetails = ({ product, userId, reviews }) => {
+
   const dispatch = useDispatch();
   const [numberCount, setNumberCount] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState(null);
@@ -142,11 +143,11 @@ const ProductDetails = ({ product, userId }) => {
                 </span>
               )}
               <div className="flex items-center gap-1 text-yellow-500">
-                {[...Array(3)].map((_, i) => (
+                {[...Array(product.averageRating)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-500" />
                 ))}
                 <span className="text-gray-600 ml-1 sm:ml-2 text-sm">
-                  (3 reviews)
+                  {reviews.length}
                 </span>
               </div>
             </div>
@@ -240,7 +241,7 @@ const ProductDetails = ({ product, userId }) => {
 
         {/* Tabs Section */}
         <div className="mt-10">
-          <ProductsTabs product={product} images={images} />
+          <ProductsTabs product={product} images={images} reviews={reviews} />
         </div>
       </div>
     </div>

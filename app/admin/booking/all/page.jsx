@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import AllBooking from './components/AllBooking'
 
 const page = () => {
   return (
     <div>
-      <AllBooking/>
+      <Suspense fallback={<div className='w-full flex items-center justify-center'>Loading Booking Data.....</div>}>
+        <AllBooking/>
+      </Suspense>
     </div>
   )
 }

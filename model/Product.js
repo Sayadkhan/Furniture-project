@@ -55,6 +55,18 @@ const ProductSchema = new mongoose.Schema(
         price: { type: Number },
       },
     ],
+
+    // ✅ Only review IDs stored here
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+
+    // Optional aggregate fields
+    averageRating: { type: Number, default: 0 },
+    totalReviews: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

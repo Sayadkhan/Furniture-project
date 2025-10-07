@@ -11,6 +11,7 @@ const nextConfig = {
       "images.unsplash.com",
       "randomuser.me",
       "res.cloudinary.com",
+      "www.gravatar.com",
     ],
   },
 };
