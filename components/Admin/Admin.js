@@ -68,6 +68,11 @@ const sidebarLinks = [
     children: [{ href: "/admin/order/all", label: "All Orders" }],
   },
   {
+    label: "Booking",
+    icon: ShoppingCart,
+    children: [{ href: "/admin/booking/all", label: "All Booking" }],
+  },
+  {
     label: "Social Links",
     icon: Ticket,
     children: [
@@ -79,7 +84,7 @@ const sidebarLinks = [
     label: "Banner",
     icon: Ticket,
     children: [
-      { href: "/admin/banner/all", label: "All Home Banner" },
+      // { href: "/admin/banner/all", label: "All Home Banner" },
       { href: "/admin/banner/add", label: "Add Home Banner" },
     ],
   },

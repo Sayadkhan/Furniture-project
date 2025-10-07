@@ -3,22 +3,17 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import ReduxProvider from "@/Providers/ReduxProvider";
 import { FaWhatsapp } from "react-icons/fa";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
+const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
 const googleJost = Jost({
   variable: "--font-Jost",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-
 const googleLato = Lato({
   variable: "--font-Lato",
   weight: ["100", "300", "400", "700", "900"],
@@ -39,7 +34,7 @@ export default function RootLayout({ children }) {
           <ToastContainer />
           {children}
           <a
-            href="https://wa.me/+8801611239608" // replace with your number
+            href="https://wa.me/+8801611239608"
             target="_blank"
             rel="noopener noreferrer"
             style={{

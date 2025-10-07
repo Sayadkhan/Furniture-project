@@ -43,7 +43,9 @@ const slidesData = [
   },
 ];
 
-const Hero = () => {
+const Hero = ({banner}) => {
+
+  console.log(banner)
   return (
     <section className="py-6 sm:py-8 lg:py-10 relative">
       <div className="container mx-auto px-3 sm:px-5">
@@ -61,8 +63,8 @@ const Hero = () => {
           }}
           className="mySwiper rounded-2xl overflow-hidden shadow-lg"
         >
-          {slidesData.map((slide) => (
-            <SwiperSlide key={slide.id}>
+          {banner.map((slide, index) => (
+            <SwiperSlide key={index}>
               <div className="relative flex flex-col md:flex-row items-center justify-between bg-[#edeae5] rounded-2xl overflow-hidden h-auto md:h-[450px] xl:h-[545px]">
 
                 {/* Image Section */}

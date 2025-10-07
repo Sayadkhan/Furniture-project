@@ -12,7 +12,7 @@ import { Suspense } from 'react';
 async function getAllCategoryWithSub() {
   await connectDB();
 
-  const categories = await Category.find({}).sort({ createdAt: -1 }).lean();
+  const categories = await Category.find({top_category:true}).sort({ createdAt: -1 }).lean();
   const categoriesWithSubAndChild = await Promise.all(
     categories.map(async (cat) => {
       const subcategories = await SubCategory.find({

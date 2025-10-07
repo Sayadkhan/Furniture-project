@@ -53,7 +53,7 @@ export default function OrdersPage({ allOrder }) {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log(orders)
+
 
   const [search, setSearch] = useState("");
   const [paymentFilter, setPaymentFilter] = useState("all");

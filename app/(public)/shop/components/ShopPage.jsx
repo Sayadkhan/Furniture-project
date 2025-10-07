@@ -63,7 +63,7 @@ const ShopPage = async () => {
 
   return (
 <Suspense fallback={<>Getting the Data.....</>}>
-      <ShopClient
+    <ShopClient
       products={products}
       categories={categories}
       subCategories={subCategories}
