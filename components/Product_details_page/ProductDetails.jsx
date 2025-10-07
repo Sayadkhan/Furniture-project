@@ -142,14 +142,19 @@ const ProductDetails = ({ product, userId, reviews }) => {
                   ${activePrice}
                 </span>
               )}
+           {product?.averageRating > 0 && (
+            
               <div className="flex items-center gap-1 text-yellow-500">
-                {[...Array(product.averageRating)].map((_, i) => (
+                {[...Array(product?.averageRating)].map((_, i) => (
                   <Star key={i} className="w-4 h-4 sm:w-5 sm:h-5 fill-yellow-500" />
                 ))}
                 <span className="text-gray-600 ml-1 sm:ml-2 text-sm">
                   {reviews.length}
                 </span>
               </div>
+           )
+             
+           }
             </div>
 
             {/* Stock */}

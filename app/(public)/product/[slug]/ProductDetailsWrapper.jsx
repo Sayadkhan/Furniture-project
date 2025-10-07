@@ -21,7 +21,7 @@ export default async function ProductDetailsWrapper({ slug }) {
 
   // ✅ Fetch approved reviews separately
   const reviews = await Review.find({
-    product: product._id,
+    product: product?._id,
     approved: true,
   })
     .sort({ createdAt: -1 }) 
