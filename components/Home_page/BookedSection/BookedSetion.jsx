@@ -10,6 +10,7 @@ const BookedSection = () => {
     address: "",
     email: "",
     phone: "",
+    date: "",
     description: "",
   });
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,14 @@ const BookedSection = () => {
       
       // Show thank you modal
       setShowModal(true);
-      setFormData({ name: "", address: "", email: "", phone: "", description: "" });
+      setFormData({
+        name: "",
+        address: "",
+        email: "",
+        phone: "",
+        date: "",
+        description: "",
+      });
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong, please try again.");
@@ -82,7 +90,8 @@ const BookedSection = () => {
             Book Your Free Visit
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit}>
-            <div>
+        <div className="grid grid-cols-2 gap-5">
+              <div>
               <label className="block text-gray-700 font-medium mb-2">Name</label>
               <input
                 type="text"
@@ -107,6 +116,7 @@ const BookedSection = () => {
                 required
               />
             </div>
+        </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-5 w-full">
               <div className="w-full">
@@ -137,6 +147,18 @@ const BookedSection = () => {
             </div>
 
             <div>
+              <label className="block text-gray-700 font-medium mb-2">Preferred Date</label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#c49b63] outline-none transition-all"
+                required
+              />
+            </div>
+
+            <div>
               <label className="block text-gray-700 font-medium mb-2">Description</label>
               <textarea
                 name="description"
@@ -159,7 +181,6 @@ const BookedSection = () => {
         </div>
       </div>
 
-  
       {/* Thank You Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -185,7 +206,6 @@ const BookedSection = () => {
           </div>
         </div>
       )}
-
     </section>
   );
 };

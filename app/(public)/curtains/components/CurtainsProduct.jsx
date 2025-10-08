@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { X } from "lucide-react";
+import { X, PhoneCall, MessageCircle } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Navigation,
@@ -18,6 +18,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/zoom";
 import "swiper/css/effect-fade";
+import BookedSection from "@/components/Home_page/BookedSection/BookedSetion";
 
 const CurtainsProduct = ({ products }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -60,50 +61,57 @@ const CurtainsProduct = ({ products }) => {
 
   return (
     <>
- <div className="container mx-auto">
-       {/* 🖼 Product Slider */}
-      <div className="w-full px-4 py-8">
-        <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
-          spaceBetween={20}
-          slidesPerView={1}
-          loop={true}
-          navigation
-          pagination={{ clickable: true }}
-          autoplay={{ delay: 2500, disableOnInteraction: false }}
-          breakpoints={{
-            640: { slidesPerView: 2 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 2 },
-          }}
-          className="mySwiper"
-        >
-          {products?.map((product) => (
-            <SwiperSlide key={product._id}>
-              <div
-                className="relative group w-full h-96 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
-                onClick={() => openLightbox(product)}
-              >
-                <Image
-                  src={product.images?.[0]}
-                  alt={product.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                {product.images?.[1] && (
+      <div className="container mx-auto">
+        {/* 🖼 Product Slider */}
+        <div className="w-full px-4 py-8">
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={20}
+            slidesPerView={1}
+            loop={true}
+            navigation
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 2500, disableOnInteraction: false }}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 2 },
+            }}
+            className="mySwiper"
+          >
+            {products?.map((product) => (
+              <SwiperSlide key={product._id}>
+                <div
+                  className="relative group w-full h-96 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
+                  onClick={() => openLightbox(product)}
+                >
                   <Image
-                    src={product.images[1]}
-                    alt={`${product.name} hover`}
+                    src={product.images?.[0]}
+                    alt={product.name}
                     fill
-                    className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                )}
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                  {product.images?.[1] && (
+                    <Image
+                      src={product.images[1]}
+                      alt={`${product.name} hover`}
+                      fill
+                      className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    />
+                  )}
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        {/* Booked Section */}
+        <div>
+          <BookedSection />
+        </div>
+
+ 
       </div>
- </div>
 
       {/* 🔍 Lightbox Viewer */}
       {selectedProduct && (

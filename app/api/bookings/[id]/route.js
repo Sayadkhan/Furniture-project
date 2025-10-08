@@ -21,8 +21,6 @@ export async function PATCH(request, { params }) {
       { new: true }
     );
 
-    console.log(updatedBooking);
-
     if (!updatedBooking) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
@@ -35,6 +33,32 @@ export async function PATCH(request, { params }) {
     console.error("Error updating booking:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req, { params }) {
+  try {
+    await connectDB();
+    const { id } = params;
+
+    const banner = await Booking.findById(id);
+    if (!banner)
+      return new Response(JSON.stringify({ message: "Banner not found" }), {
+        status: 404,
+      });
+
+    await Booking.findByIdAndDelete(id);
+
+    return new Response(
+      JSON.stringify({ message: "Banner deleted successfully" }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Delete error:", error);
+    return new Response(
+      JSON.stringify({ message: "Failed to delete banner" }),
       { status: 500 }
     );
   }

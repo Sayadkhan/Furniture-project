@@ -17,24 +17,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const DashboardPage = ({ totalProducts, totalOrders, totalRevenue }) => {
+const DashboardPage = ({ totalProducts, totalOrders, totalRevenue, totalBooking }) => {
   const [recentOrders, setRecentOrders] = useState([]);
 
-  // ✅ Fetch recent orders (optional if you have API route)
-  useEffect(() => {
-    const fetchRecentOrders = async () => {
-      try {
-        const res = await fetch("/api/order?limit=5"); // example route
-        if (res.ok) {
-          const data = await res.json();
-          setRecentOrders(data.orders || []);
-        }
-      } catch (error) {
-        console.error("Error loading recent orders:", error);
-      }
-    };
-    fetchRecentOrders();
-  }, []);
+
 
   return (
     <div className="p-6 space-y-8">
@@ -88,56 +74,22 @@ const DashboardPage = ({ totalProducts, totalOrders, totalRevenue }) => {
             <p className="text-sm text-muted-foreground">Total lifetime sales</p>
           </CardContent>
         </Card>
+        {/* Revenue */}
+        <Card className="shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-gray-700">Total Booking</CardTitle>
+            {/* <DollarSign className="w-6 h-6 text-yellow-500" /> */}
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-semibold">
+              {totalBooking || 0}
+            </p>
+            <p className="text-sm text-muted-foreground">Total lifetime sales</p>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Recent Orders */}
-      <Card className="shadow-sm border border-gray-100">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-gray-800">
-            Recent Orders
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {recentOrders.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Total</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentOrders.map((order) => (
-                  <TableRow key={order._id}>
-                    <TableCell>{order.orderId || order._id}</TableCell>
-                    <TableCell>{order.customerName || "Guest"}</TableCell>
-                    <TableCell>${order.totalAmount}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded text-xs font-medium ${
-                          order.deliveryStatus === "delivered"
-                            ? "bg-green-100 text-green-700"
-                            : order.deliveryStatus === "pending"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-blue-100 text-blue-700"
-                        }`}
-                      >
-                        {order.deliveryStatus || "Processing"}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="text-center text-gray-500 text-sm py-6">
-              No recent orders found.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+
     </div>
   );
 };

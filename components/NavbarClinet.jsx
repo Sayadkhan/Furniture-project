@@ -39,12 +39,14 @@ const NavbarClient = ({ categories, curtains }) => {
                   <ul className="py-2">
                     {curtains.subcategories.map((sub) => (
                       <li key={sub._id}>
+                    <Link href={`/curtains/${sub._id}`}>
                         <button
-                          onClick={() => handleSubCategoryClick(sub._id)}
+                          // onClick={() => handleSubCategoryClick(sub._id)}
                           className="w-full text-left px-4 py-2 text-[15px] hover:bg-[#8b5a3d] transition-colors capitalize"
                         >
                           {sub.name}
                         </button>
+                        </Link>
                       </li>
                     ))}
                   </ul>
