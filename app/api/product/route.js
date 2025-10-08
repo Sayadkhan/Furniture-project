@@ -98,7 +98,7 @@ export async function POST(req) {
       discount: Number(formData.get("discount") || 0),
       discountType: formData.get("discountType") || "percentage",
       category: formData.get("category"),
-      childcategory: formData.get("childcategory"),
+      childcategory: formData.get("childcategory") || null,
       subcategory: formData.get("subcategory"),
       tags: formData.get("tags") ? formData.get("tags").split(",") : [],
       images: imageUrls,
@@ -111,6 +111,7 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true, product });
   } catch (err) {
+    console.log(err);
     console.error("❌ Error saving product:", err);
     return NextResponse.json(
       { success: false, message: err.message },

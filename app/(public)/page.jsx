@@ -5,6 +5,7 @@ import CategoryProduct from "@/components/Home_page/CategoryProduct";
 import FeaturedCategory from "@/components/Home_page/Featured";
 import HeroServer from "@/components/Home_page/HeroServer";
 import LatestProducts from "@/components/Home_page/LatestProduct";
+import NewCategory from "@/components/Home_page/NewCat";
 import PersentFerniture from "@/components/Home_page/PersentFerniture";
 import PopularBrands from "@/components/Home_page/PopularBrands";
 import AllProductSection from "@/components/Home_page/Product/AllProductSection";
@@ -20,7 +21,7 @@ export default function Home() {
     <>
       <Suspense fallback={<PageSkeleton title="Loading homepage..." />}>
         <HeroServer />
-        <CategoryIcons />
+        <NewCategory/>
 
         <Suspense fallback={<PageSkeleton title="Loading featured category..." />}>
           <FeaturedCategory />

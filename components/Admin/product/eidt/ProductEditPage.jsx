@@ -18,7 +18,7 @@ export default function EditProductPage({ product, categories }) {
   const [desc, setDesc] = useState(product?.desc || "");
   const [selectedCategory, setSelectedCategory] = useState(product?.category?._id || "");
   const [selectedSubcategory, setSelectedSubcategory] = useState(product?.subcategory?._id || "");
-  const [selectedChildcategory, setSelectedChildcategory] = useState(product?.childcategory?._id || "");
+  const [selectedChildcategory, setSelectedChildcategory] = useState(product?.childcategory?._id || null);
   const [price, setPrice] = useState(product?.price || 0);
   const [stock, setStock] = useState(product?.stock || 0);
   const [discount, setDiscount] = useState(product?.discount || 0);

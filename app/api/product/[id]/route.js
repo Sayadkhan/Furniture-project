@@ -38,6 +38,11 @@ export async function PUT(req, { params }) {
     body.oldImages = JSON.parse(body.oldImages || "[]");
     body.variants = JSON.parse(body.variants || "[]");
 
+    // ✅ Remove empty string ObjectId fields
+    if (!body.childcategory || body.childcategory === "") {
+      body.childcategory = null;
+    }
+
     // Handle main images upload
     const mainImagesFiles = formData.getAll("images");
     const mainImageUrls = [];

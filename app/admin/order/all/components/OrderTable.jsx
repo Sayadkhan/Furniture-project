@@ -16,6 +16,7 @@ export const dynamic = 'force-dynamic';
 
 const OrderTable = async () => {
   const allOrder = await getAllOrder();
+  console.log(allOrder)
   return (
     <div>
       <OrdersPage allOrder={allOrder} />

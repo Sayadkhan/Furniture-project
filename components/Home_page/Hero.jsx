@@ -9,43 +9,9 @@ import { Navigation, Pagination, Autoplay, FreeMode } from 'swiper/modules';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import HeroImg1 from '../../public/hero-1.jpg';
-import HeroImg2 from '../../public/hero-2.jpg';
-import HeroImg3 from '../../public/hero-3.jpg';
-
-const slidesData = [
-  {
-    id: 1,
-    title: 'Perfect Cabinets For Your Kitchen.',
-    subtitle: 'UP TO 50% OFF!',
-    description:
-      'Transform your space with stylish, durable furniture designed for comfort, elegance, and lasting quality.',
-    image: HeroImg1,
-    link: '/shop',
-  },
-  {
-    id: 2,
-    title: 'Modern Designs, Great Comfort.',
-    subtitle: 'LIMITED TIME OFFER!',
-    description:
-      'Bring home furniture that matches your style while staying affordable and practical.',
-    image: HeroImg2,
-    link: '/shop',
-  },
-  {
-    id: 3,
-    title: 'Make Your Living Room Elegant.',
-    subtitle: 'EXCLUSIVE DEAL!',
-    description:
-      'Discover premium-quality furniture that enhances every corner of your home.',
-    image: HeroImg3,
-    link: '/shop',
-  },
-];
 
 const Hero = ({banner}) => {
 
-  console.log(banner)
   return (
     <section className="py-6 sm:py-8 lg:py-10 relative">
       <div className="container mx-auto px-3 sm:px-5">

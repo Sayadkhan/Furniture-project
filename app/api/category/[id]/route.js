@@ -7,8 +7,9 @@ export async function PATCH(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params;
+    const { id } = params;
     const category = await Category.findById(id);
+
     if (!category) {
       return NextResponse.json(
         { error: "Category not found" },
@@ -20,25 +21,36 @@ export async function PATCH(req, { params }) {
     const name = formData.get("name");
     const desc = formData.get("desc");
     const imageFile = formData.get("image");
+    const iconFile = formData.get("icon");
 
-    // Update name and description if provided
+    // ✅ Update basic fields
     if (name) category.name = name;
     if (desc) category.desc = desc;
 
-    // Handle image upload
+    // ✅ Handle image upload
     if (imageFile && imageFile.size > 0) {
       const buffer = Buffer.from(await imageFile.arrayBuffer());
       const uploadRes = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { folder: "categories" },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
+          (error, result) => (error ? reject(error) : resolve(result))
         );
         stream.end(buffer);
       });
       category.image = uploadRes.secure_url;
+    }
+
+    // ✅ Handle icon upload
+    if (iconFile && iconFile.size > 0) {
+      const buffer = Buffer.from(await iconFile.arrayBuffer());
+      const uploadRes = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "categories/icons" },
+          (error, result) => (error ? reject(error) : resolve(result))
+        );
+        stream.end(buffer);
+      });
+      category.icon = uploadRes.secure_url;
     }
 
     await category.save();
@@ -48,11 +60,10 @@ export async function PATCH(req, { params }) {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
+    console.error("Error updating category:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
 export async function DELETE(req, { params }) {
   const { id } = params;
 
