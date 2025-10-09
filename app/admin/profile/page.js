@@ -1,20 +1,22 @@
-import Admin from "@/model/Admin";
-import React from "react";
+import { Suspense } from "react";
+import Profile from "./components/Profile";
 
-async function getAdminDetails(id) {
-  await connectDB();
+export const dynamic = "force-dynamic";
 
-  const admin = await Admin.findOne({
-    _id: new mongoose.Types.ObjectId(id),
-  });
-
-  if (!admin) return null;
-
-  return JSON.parse(JSON.stringify(admin));
-}
-
-const page = () => {
-  return <div></div>;
+const page = async () => {
+  return (
+    <div>
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center">
+            Loading profile data....
+          </div>
+        }
+      >
+        <Profile />
+      </Suspense>
+    </div>
+  );
 };
 
 export default page;

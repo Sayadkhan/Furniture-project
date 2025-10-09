@@ -55,7 +55,7 @@ const NavbarClient = ({ categories, curtains }) => {
           {curtains && (
             <div className="relative group cursor-pointer">
               <Link href={`/curtains`}>
-                <button className="text-[18px] font-medium hover:text-gray-800 transition flex items-center gap-1 capitalize">
+                <button className="text-[18px] font-medium hover:text-gray-800 transition flex items-center gap-1 capitalize cursor-pointer">
                   {curtains.name || "Curtains"}
                   <span className="text-sm">&#9662;</span>
                 </button>
@@ -67,7 +67,7 @@ const NavbarClient = ({ categories, curtains }) => {
                     {curtains.subcategories.map((sub) => (
                       <li key={sub._id}>
                         <Link href={`/curtains/${sub._id}`}>
-                          <button className="w-full text-left px-4 py-2 text-[15px] hover:bg-[#8b5a3d] capitalize">
+                          <button className="w-full text-left px-4 py-2 text-[15px] hover:bg-[#8b5a3d] capitalize cursor-pointer">
                             {sub.name}
                           </button>
                         </Link>
@@ -84,7 +84,7 @@ const NavbarClient = ({ categories, curtains }) => {
             <div key={cat._id} className="relative group cursor-pointer">
               <button
                 onClick={() => handleCategoryClick(cat._id)}
-                className="text-[18px] font-medium hover:text-gray-800 transition capitalize"
+                className="text-[18px] font-medium hover:text-gray-800 transition capitalize cursor-pointer"
               >
                 {cat.name}
               </button>

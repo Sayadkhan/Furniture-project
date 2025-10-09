@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -18,7 +18,6 @@ import {
   Image as ImageIcon,
   Globe,
 } from "lucide-react";
-import { FaGolfBall } from "react-icons/fa";
 
 const sidebarLinks = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -88,10 +87,7 @@ const sidebarLinks = [
   {
     label: "Banner",
     icon: Ticket,
-    children: [
-      // { href: "/admin/banner/all", label: "All Home Banner" },
-      { href: "/admin/banner/add", label: "Add Home Banner" },
-    ],
+    children: [{ href: "/admin/banner/add", label: "Add Home Banner" }],
   },
   {
     label: "Settings",
@@ -111,7 +107,6 @@ const sidebarLinks = [
   },
 ];
 
-// Recursive Sidebar Item with Nested Accordion
 function SidebarItem({ item, pathname, openMenus, toggleMenu, parent = null }) {
   const { href, label, icon: Icon, children } = item;
   const isOpen = parent ? openMenus[parent]?.[label] : openMenus[label];
@@ -149,7 +144,7 @@ function SidebarItem({ item, pathname, openMenus, toggleMenu, parent = null }) {
                 pathname={pathname}
                 openMenus={openMenus}
                 toggleMenu={toggleMenu}
-                parent={label} // track nested menus
+                parent={label}
               />
             ) : (
               <Link
@@ -191,20 +186,33 @@ export default function Admin({ children }) {
   const router = useRouter();
   const [openMenus, setOpenMenus] = useState({});
   const [profileOpen, setProfileOpen] = useState(false);
+  const [admin, setAdmin] = useState(null);
 
-  // ✅ Nested Accordion toggle
+  useEffect(() => {
+    const fetchAdmin = async () => {
+      try {
+        const res = await fetch("/api/admin/me", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (data.success) setAdmin(data.admin);
+      } catch (err) {
+        console.error("Failed to fetch admin info:", err);
+      }
+    };
+    fetchAdmin();
+  }, []);
+
   const toggleMenu = (label, parent = null) => {
     setOpenMenus((prev) => {
       if (parent) {
         const parentState = prev[parent] || {};
         const newParentState = { ...parentState };
-
         Object.keys(newParentState).forEach((key) => {
           if (key !== label) newParentState[key] = false;
         });
-
         newParentState[label] = !newParentState[label];
-
         return { ...prev, [parent]: newParentState };
       }
 
@@ -212,7 +220,6 @@ export default function Admin({ children }) {
       Object.keys(prev).forEach((key) => {
         if (key !== label) newState[key] = false;
       });
-
       newState[label] = !prev[label];
       return newState;
     });
@@ -228,9 +235,7 @@ export default function Admin({ children }) {
   };
 
   const isLoginPage = pathname === "/admin/login";
-  if (isLoginPage) {
-    return <div className="min-h-screen w-full">{children}</div>;
-  }
+  if (isLoginPage) return <div className="min-h-screen w-full">{children}</div>;
 
   return (
     <div className="min-h-screen flex bg-gray-50">
@@ -270,11 +275,9 @@ export default function Admin({ children }) {
           <h2 className="text-base font-semibold text-gray-800">Admin Panel</h2>
 
           <div className="flex gap-5 items-center justify-center">
-            <div className="flex gap-5 items-center justify-center">
-              <a target="_blank" href={"/"}>
-                <Globe className="w-6 h-6 text-gray-700 hover:text-gray-900" />
-              </a>
-            </div>
+            <a target="_blank" href={"/"}>
+              <Globe className="w-6 h-6 text-gray-700 hover:text-gray-900" />
+            </a>
 
             <div className="relative">
               <button
@@ -282,12 +285,12 @@ export default function Admin({ children }) {
                 className="flex items-center gap-2"
               >
                 <img
-                  src="/admin-avatar.png"
+                  src={admin?.profile || "/admin-avatar.png"}
                   alt="Admin"
-                  className="w-9 h-9 rounded-full border"
+                  className="w-9 h-9 rounded-full border object-cover"
                 />
                 <span className="text-sm text-gray-700 hidden sm:inline">
-                  Admin
+                  {admin?.name || "Admin"}
                 </span>
               </button>
 

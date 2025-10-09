@@ -2,6 +2,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartSlice from "../slice/CartSlice";
 import filterSlice from "../slice/filterSlice";
+import adminSlice from "../slice/adminSlice";
 
 let store;
 
@@ -10,6 +11,7 @@ export function makeStore() {
     reducer: {
       cart: cartSlice,
       filters: filterSlice,
+      admin: adminSlice,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({

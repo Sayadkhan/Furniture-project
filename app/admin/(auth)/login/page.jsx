@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setAdmin } from "@/redux/slice/adminSlice";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -11,28 +13,43 @@ export default function AdminLogin() {
 
   const router = useRouter();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  const dispatch = useDispatch();
 
-    try {
-      const res = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Invalid credentials");
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-      router.push("/admin/dashboard");
-    } catch (err) {
-      setError(err.message || "Login failed");
-    } finally {
-      setLoading(false);
+  try {
+    const res = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+    
+      const meRes = await fetch("/api/admin/me", { credentials: "include" });
+      const meData = await meRes.json();
+
+      if (meData.success) {
+        dispatch(setAdmin(meData.admin));
+        router.push("/admin/dashboard"); 
+      } else {
+        toast.error("Failed to fetch admin info after login");
+      }
+    } else {
+      setError(data.error || "Login failed");
     }
-  };
+  } catch (err) {
+    setError(err.message || "Login failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
   <div className="">
