@@ -212,8 +212,8 @@ const ProductDetails = ({ product, userId, reviews }) => {
 
             {/* whatsapp button */}
 
-            <div className="w-96 mt-5">
-                    {/* WhatsApp Button */}
+      <div className="w-full lg:w-96 mt-5">
+               {/* WhatsApp Button */}
         <div className="py-10">
               <a
               href={`https://wa.me/1234567890?text=Hi, I am interested in ${product?.name}`}
@@ -235,7 +235,7 @@ const ProductDetails = ({ product, userId, reviews }) => {
             </div>
 
        {/* Quantity + Add To Cart + WhatsApp */}
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-6">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 ">
             <div className="flex items-center border rounded-md">
               <button
                 onClick={() => setNumberCount(Math.max(1, numberCount - 1))}

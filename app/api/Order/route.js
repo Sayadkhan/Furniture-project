@@ -70,21 +70,35 @@ export async function POST(req) {
       await coupon.save();
     }
 
-    // final total after discount
+    // 🧮 calculate final total (after discount)
     const totalPrice = subtotal - discountAmount;
 
+    // 🧾 find last order to generate incremental orderId
+    const lastOrder = await Order.findOne().sort({ createdAt: -1 }).lean();
+    const nextOrderId = lastOrder?.orderId ? lastOrder.orderId + 1 : 1001;
+
+    // 🛍️ create order data
     const orderData = {
-      ...body,
+      orderId: nextOrderId,
+      customer: body.customer,
+      items: body.items,
+      shippingMethod: body.shippingMethod,
+      paymentMethod: body.paymentMethod,
       subtotal,
       totalPrice,
       coupon: appliedCoupon,
     };
 
-    console.log(orderData);
-
     const order = await Order.create(orderData);
 
-    return new Response(JSON.stringify(order), { status: 201 });
+    // ✅ return format that frontend expects
+    return new Response(
+      JSON.stringify({
+        orderId: order.orderId,
+        order,
+      }),
+      { status: 201 }
+    );
   } catch (error) {
     console.error("Order creation error:", error);
     return new Response(JSON.stringify({ error: "Error creating order" }), {
@@ -99,6 +113,9 @@ export async function GET() {
     const orders = await Order.find().sort({ createdAt: -1 });
     return new Response(JSON.stringify(orders), { status: 200 });
   } catch (error) {
-    return new Response("Error fetching orders", { status: 500 });
+    console.error("Fetch orders error:", error);
+    return new Response(JSON.stringify({ error: "Error fetching orders" }), {
+      status: 500,
+    });
   }
 }

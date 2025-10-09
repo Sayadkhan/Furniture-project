@@ -165,108 +165,161 @@ const NavbarClient = ({ categories, curtains }) => {
                 </button>
               </div>
 
-              <div className="p-4 space-y-4">
-                {/* Curtains */}
-                {curtains && (
-                  <div>
-                    <Link
-                      href="/curtains"
-                      onClick={() => setMenuOpen(false)}
-                      className="block text-[17px] font-semibold mb-1"
-                    >
-                      {curtains.name || "Curtains"}
-                    </Link>
-                    {curtains.subcategories?.map((sub) => (
-                      <Link
-                        key={sub._id}
-                        href={`/curtains/${sub._id}`}
-                        onClick={() => setMenuOpen(false)}
-                        className="block text-sm pl-3 py-1 text-gray-600 hover:text-black"
-                      >
-                        {sub.name}
-                      </Link>
-                    ))}
-                  </div>
+
+        <div className="p-4 space-y-6">
+          {/* Curtains Section */}
+          {curtains && (
+            <div className="border-b border-gray-200 pb-3">
+              <button
+                onClick={() => toggleCategoryMenu("curtains")}
+                className="w-full text-left text-[18px] font-semibold py-2 flex justify-between items-center text-gray-900"
+              >
+                {curtains.name || "Curtains"}
+                {openCategory === "curtains" ? (
+                  <ChevronUp size={18} />
+                ) : (
+                  <ChevronDown size={18} />
                 )}
+              </button>
 
-                {/* Main Categories */}
-                {categories.map((cat) => (
-                  <div key={cat._id}>
-                    <button
-                      onClick={() => toggleCategoryMenu(cat._id)}
-                      className="w-full text-left text-[17px] font-semibold py-2 flex justify-between items-center"
-                    >
-                      {cat.name}
-                      {openCategory === cat._id ? (
-                        <ChevronUp size={18} />
-                      ) : (
-                        <ChevronDown size={18} />
-                      )}
-                    </button>
-
-                    {/* Subcategories Accordion */}
-                    <AnimatePresence>
-                      {openCategory === cat._id && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="pl-4"
+              <AnimatePresence>
+                {openCategory === "curtains" && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="pl-3 border-l border-gray-200 ml-2"
+                  >
+                    {curtains.subcategories?.map((sub) => (
+                      <div key={sub._id} className="mt-1">
+                        <button
+                          onClick={() => toggleSubMenu(sub._id)}
+                          className="w-full text-left text-[15px] font-medium py-1 flex justify-between items-center text-gray-700"
                         >
-                          {cat.subcategories.map((sub) => (
-                            <div key={sub._id} className="mt-1">
-                              <button
-                                onClick={() => toggleSubMenu(sub._id)}
-                                className="w-full text-left text-[15px] font-medium py-1 flex justify-between items-center text-gray-700"
-                              >
-                                {sub.name}
-                                {openSubCategory === sub._id ? (
-                                  <ChevronUp size={16} />
-                                ) : (
-                                  <ChevronDown size={16} />
-                                )}
-                              </button>
+                          {sub.name}
+                          {openSubCategory === sub._id ? (
+                            <ChevronUp size={16} />
+                          ) : (
+                            <ChevronDown size={16} />
+                          )}
+                        </button>
 
-                              {/* Child Categories */}
-                              <AnimatePresence>
-                                {openSubCategory === sub._id && (
-                                  <motion.ul
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: "auto", opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
-                                    className="pl-4 space-y-1 pb-2"
+                        <AnimatePresence>
+                          {openSubCategory === sub._id && (
+                            <motion.ul
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="pl-4 space-y-1 pb-2"
+                            >
+                              {sub.childcategories?.map((child) => (
+                                <li key={child._id}>
+                                  <button
+                                    onClick={() => handleChildCategoryClick(child._id)}
+                                    className="text-gray-600 text-sm hover:text-black"
                                   >
-                                    {sub.childcategories?.map((child) => (
-                                      <li key={child._id}>
-                                        <button
-                                          onClick={() =>
-                                            handleChildCategoryClick(child._id)
-                                          }
-                                          className="text-gray-600 text-sm hover:text-black"
-                                        >
-                                          {child.name}
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </motion.ul>
-                                )}
-                              </AnimatePresence>
-                            </div>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ))}
+                                    {child.name}
+                                  </button>
+                                </li>
+                              ))}
+                            </motion.ul>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
 
-                <Link
-                  href="/shop"
-                  onClick={() => setMenuOpen(false)}
-                  className="block text-[17px] font-semibold py-2 text-[#8b5a3d] underline"
+          {/* Furniture Section */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900 underline mb-3">
+              Furniture
+            </h2>
+
+            <div className="space-y-1">
+              {categories.map((cat) => (
+                <div
+                  key={cat._id}
+                  className="border-b border-gray-100 pb-1 last:border-none"
                 >
-                  More
-                </Link>
-              </div>
+                  <button
+                    onClick={() => toggleCategoryMenu(cat._id)}
+                    className="w-full text-left text-[17px] font-medium py-2 flex justify-between items-center text-gray-800"
+                  >
+                    {cat.name}
+                    {openCategory === cat._id ? (
+                      <ChevronUp size={18} />
+                    ) : (
+                      <ChevronDown size={18} />
+                    )}
+                  </button>
+
+                  <AnimatePresence>
+                    {openCategory === cat._id && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="pl-3 border-l border-gray-200 ml-2"
+                      >
+                        {cat.subcategories.map((sub) => (
+                          <div key={sub._id} className="mt-1">
+                            <button
+                              onClick={() => toggleSubMenu(sub._id)}
+                              className="w-full text-left text-[15px] font-medium py-1 flex justify-between items-center text-gray-700"
+                            >
+                              {sub.name}
+                              {openSubCategory === sub._id ? (
+                                <ChevronUp size={16} />
+                              ) : (
+                                <ChevronDown size={16} />
+                              )}
+                            </button>
+
+                            <AnimatePresence>
+                              {openSubCategory === sub._id && (
+                                <motion.ul
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  className="pl-4 space-y-1 pb-2"
+                                >
+                                  {sub.childcategories?.map((child) => (
+                                    <li key={child._id}>
+                                      <button
+                                        onClick={() => handleChildCategoryClick(child._id)}
+                                        className="text-gray-600 text-sm hover:text-black"
+                                      >
+                                        {child.name}
+                                      </button>
+                                    </li>
+                                  ))}
+                                </motion.ul>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Link
+            href="/shop"
+            onClick={() => setMenuOpen(false)}
+            className="block text-[17px] font-semibold py-3 text-[#8b5a3d] underline text-center"
+          >
+            More
+          </Link>
+        </div>
+
+
             </motion.div>
           </>
         )}

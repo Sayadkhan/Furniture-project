@@ -202,7 +202,7 @@ export default function OrdersPage({ allOrder }) {
                   paginatedOrders.map((order, index) => (
                     <TableRow key={order._id} className="hover:bg-muted/40">
                       <TableCell>{(currentPage - 1) * pageSize + (index + 1)}</TableCell>
-                      <TableCell className="font-mono text-xs">#{order._id.slice(-6)}</TableCell>
+                      <TableCell className="font-mono text-xs">#{order.orderId}</TableCell>
                       <TableCell>{order.customer.firstName} {order.customer.lastName}</TableCell>
                       <TableCell>{order.customer.phone}</TableCell>
                       <TableCell className="font-semibold text-green-600">

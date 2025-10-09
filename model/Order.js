@@ -43,6 +43,8 @@ const OrderSchema = new mongoose.Schema(
       },
     },
 
+    orderId: { type: String, require: true },
+
     subtotal: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
 

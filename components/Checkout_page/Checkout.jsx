@@ -6,6 +6,8 @@ import countries from "world-countries";
 import { useRouter } from "next/navigation";
 import { clearCart } from "@/redux/slice/CartSlice";
 import { toast } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaWhatsapp } from "react-icons/fa";
 
 const CheckoutPage = () => {
   const [form, setForm] = useState({
@@ -21,10 +23,7 @@ const CheckoutPage = () => {
   });
 
   const countryList = countries
-    .map((c) => ({
-      name: c.name.common,
-      code: c.cca2,
-    }))
+    .map((c) => ({ name: c.name.common, code: c.cca2 }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
   const dispatch = useDispatch();
@@ -37,16 +36,16 @@ const CheckoutPage = () => {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [loadingOrder, setLoadingOrder] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
 
-  useEffect(() => {
-    if (!items || items.length === 0) {
-      router.push("/shop");
-    }
-  }, [items, router]);
+  console.log(orderDetails)
 
-  const shippingCost =
-    shipping === "flat" ? 5 : shipping === "local" ? 10 : 0;
+  // useEffect(() => {
+  //   if (!items || items.length === 0) router.push("/shop");
+  // }, [items, router]);
 
+  const shippingCost = shipping === "flat" ? 5 : shipping === "local" ? 10 : 0;
   const subtotal = totalPrice;
   const grandTotal = subtotal - discountAmount + shippingCost;
 
@@ -101,33 +100,154 @@ const CheckoutPage = () => {
         }),
       });
 
-      if (!res.ok) throw new Error("Order failed");
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Order failed");
 
-      await res.json();
-      router.push("/thank-you");
-      toast.success("✅ Your order was placed successfully!");
+
+
+      // ✅ Show success modal
+      setOrderDetails(data.order);
+      setShowSuccessModal(true);
       dispatch(clearCart());
+      toast.success("✅ Your order was placed successfully!");
     } catch (error) {
+      console.log(error);
       toast.error("❌ Failed to place order. Try again later.");
     } finally {
       setLoadingOrder(false);
     }
   };
 
+  const handleOkClick = () => {
+    setShowSuccessModal(false);
+    router.push("/");
+  };
+
+
   return (
-    <div className="container mx-auto py-10 px-4">
+    <div className="container mx-auto py-10 px-4 relative">
+<AnimatePresence>
+  {showSuccessModal && orderDetails && (
+    <motion.div
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="bg-white rounded-2xl p-8 w-[90%] max-w-lg text-center shadow-2xl border border-gray-100"
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.8, opacity: 0 }}
+      >
+        {/* 🎉 Success Header */}
+        <div className="mb-6">
+          <div className="mx-auto w-16 h-16 flex items-center justify-center bg-green-100 rounded-full mb-4">
+            <span className="text-3xl">🎉</span>
+          </div>
+          <h2 className="text-2xl font-bold text-green-600">
+            Order Placed Successfully!
+          </h2>
+          <p className="text-gray-600 mt-1">
+            Thank you for your purchase,{" "}
+            <span className="font-medium">{orderDetails.customer?.firstName}</span>!
+          </p>
+        </div>
+
+     <div className="grid grid-cols-2 gap-5">
+         {/* 🧾 Order Info */}
+        <div className="bg-gray-50 rounded-xl p-4 mb-5 text-left text-sm border">
+          <p className="text-gray-700 font-semibold mb-2">
+            🧾 Order Information
+          </p>
+          <div className="flex justify-between mb-1">
+            <span className="text-gray-500">Order ID:</span>
+            <span className="font-medium">{orderDetails.orderId}</span>
+          </div>
+          <div className="flex justify-between mb-1">
+            <span className="text-gray-500">Total:</span>
+            <span className="font-semibold text-green-600">
+              ${orderDetails.subtotal.toFixed(2)}
+            </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-gray-500">Payment:</span>
+            <span className="font-medium capitalize">
+              {orderDetails.paymentMethod || "N/A"}
+            </span>
+          </div>
+        </div>
+
+        {/* 👤 Customer Info */}
+        <div className="bg-gray-50 rounded-xl p-4 mb-5 text-left text-sm border">
+          <p className="text-gray-700 font-semibold mb-2">👤 Customer Details</p>
+          <p>
+            <span className="text-gray-500">Name:</span>{" "}
+            {orderDetails.customer?.firstName} {orderDetails.customer?.lastName}
+          </p>
+          <p>
+            <span className="text-gray-500">Phone:</span>{" "}
+            {orderDetails.customer?.phone}
+          </p>
+          <p>
+            <span className="text-gray-500">Email:</span>{" "}
+            {orderDetails.customer?.email}
+          </p>
+          <p>
+            <span className="text-gray-500">Address:</span>{" "}
+            {orderDetails.customer?.address}, {orderDetails.customer?.city},{" "}
+            {orderDetails.customer?.country}
+          </p>
+        </div>
+     </div>
+
+        {/* 🛍️ Order Items */}
+        <div className="border-t border-b py-3 text-left text-sm max-h-[150px] overflow-y-auto mb-4">
+          {orderDetails.items.map((item, idx) => (
+            <div key={idx} className="flex justify-between mb-1">
+              <span>
+                {item.name} × {item.quantity}
+              </span>
+              <span>${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Buttons */}
+        <div className="flex flex-col gap-3 mt-5">
+          <a
+            href={`https://wa.me/8801700000000?text=Hi, I placed an order (${orderDetails.orderId}).`}
+            target="_blank"
+            className="flex items-center justify-center gap-2 bg-green-600 text-white py-2 px-4 rounded-xl hover:bg-green-700 transition"
+          >
+            <FaWhatsapp size={20} /> Contact on WhatsApp
+          </a>
+
+          <button
+            onClick={() => {
+              setShowSuccessModal(false);
+              router.push("/");
+            }}
+            className="bg-black text-white py-2 px-5 rounded-xl hover:bg-gray-800 transition"
+          >
+            OK
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
+      {/* ✅ Main Checkout Layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
         {/* Billing Form */}
         <div className="md:col-span-2 bg-white p-6 rounded-2xl shadow-sm border">
           <h2 className="text-2xl font-semibold mb-6">Billing details</h2>
           <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-            {/* Name */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 type="text"
                 placeholder="First name *"
-                required
                 className={inputField}
                 value={form.firstName}
                 onChange={(e) => setForm({ ...form, firstName: e.target.value })}
@@ -135,19 +255,16 @@ const CheckoutPage = () => {
               <input
                 type="text"
                 placeholder="Last name *"
-                required
                 className={inputField}
                 value={form.lastName}
                 onChange={(e) => setForm({ ...form, lastName: e.target.value })}
               />
             </div>
 
-            {/* Phone + Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 type="tel"
                 placeholder="Phone *"
-                required
                 className={inputField}
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -155,14 +272,12 @@ const CheckoutPage = () => {
               <input
                 type="email"
                 placeholder="Email address *"
-                required
                 className={inputField}
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
               />
             </div>
 
-            {/* Country */}
             <select
               className={inputField}
               value={form.country}
@@ -175,22 +290,18 @@ const CheckoutPage = () => {
               ))}
             </select>
 
-            {/* Address */}
             <input
               type="text"
               placeholder="Street address *"
-              required
               className={inputField}
               value={form.address}
               onChange={(e) => setForm({ ...form, address: e.target.value })}
             />
 
-            {/* City + Postal */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 type="text"
                 placeholder="Town / City *"
-                required
                 className={inputField}
                 value={form.city}
                 onChange={(e) => setForm({ ...form, city: e.target.value })}
@@ -198,14 +309,12 @@ const CheckoutPage = () => {
               <input
                 type="text"
                 placeholder="Postcode / ZIP *"
-                required
                 className={inputField}
                 value={form.postal}
                 onChange={(e) => setForm({ ...form, postal: e.target.value })}
               />
             </div>
 
-            {/* Notes */}
             <textarea
               placeholder="Order notes (optional)"
               className={inputField}
@@ -220,7 +329,6 @@ const CheckoutPage = () => {
         <div className="bg-white border p-6 rounded-2xl shadow-sm">
           <h2 className="text-lg font-semibold pb-3 border-b mb-6">Your order</h2>
 
-          {/* Cart Items */}
           <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2">
             {items.map((item) => (
               <div
@@ -263,16 +371,11 @@ const CheckoutPage = () => {
               value={couponCode}
               onChange={(e) => setCouponCode(e.target.value)}
             />
-            <button
-              type="button"
-              onClick={handleApplyCoupon}
-              className={btnSecondary}
-            >
+            <button type="button" onClick={handleApplyCoupon} className={btnSecondary}>
               Apply
             </button>
           </div>
 
-          {/* Totals */}
           <div className="border-t mt-4 pt-4 space-y-2 text-[15px]">
             <div className="flex justify-between">
               <span>Subtotal</span>
@@ -294,7 +397,6 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-          {/* Shipping Methods */}
           <div className="border-t py-4">
             <p className="font-medium mb-3">Shipping</p>
             <div className="space-y-2">
@@ -315,7 +417,6 @@ const CheckoutPage = () => {
             </div>
           </div>
 
-          {/* Payment */}
           <div className="mt-6 flex flex-col gap-3">
             {[
               { id: "bank", label: "Direct bank transfer" },
@@ -333,7 +434,6 @@ const CheckoutPage = () => {
             ))}
           </div>
 
-          {/* Place Order */}
           <button
             onClick={handlePlaceOrder}
             disabled={loadingOrder}
@@ -347,7 +447,7 @@ const CheckoutPage = () => {
   );
 };
 
-// Reusable Tailwind styles
+// Styles
 const inputField =
   "w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-black focus:outline-none transition";
 const btnPrimary =
