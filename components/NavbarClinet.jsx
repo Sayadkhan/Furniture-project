@@ -55,7 +55,7 @@ const NavbarClient = ({ categories, curtains }) => {
           {curtains && (
             <div className="relative group cursor-pointer">
               <Link href={`/curtains`}>
-                <button className="text-[18px] font-medium hover:text-gray-800 transition flex items-center gap-1">
+                <button className="text-[18px] font-medium hover:text-gray-800 transition flex items-center gap-1 capitalize">
                   {curtains.name || "Curtains"}
                   <span className="text-sm">&#9662;</span>
                 </button>
@@ -84,7 +84,7 @@ const NavbarClient = ({ categories, curtains }) => {
             <div key={cat._id} className="relative group cursor-pointer">
               <button
                 onClick={() => handleCategoryClick(cat._id)}
-                className="text-[18px] font-medium hover:text-gray-800 transition"
+                className="text-[18px] font-medium hover:text-gray-800 transition capitalize"
               >
                 {cat.name}
               </button>

@@ -40,7 +40,6 @@ async function getAllCategoryWithSub() {
 async function getACategoryWithSub() {
   await connectDB();
 
-  // একটা category খুঁজে বের করো
   const cat = await Category.findOne({
     name: { $regex: /^curtains$/i },
   })

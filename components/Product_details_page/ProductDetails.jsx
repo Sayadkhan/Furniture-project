@@ -92,7 +92,7 @@ const ProductDetails = ({ product, userId, reviews }) => {
                   >
                     <Image
                       src={img}
-                      alt={product.name}
+                      alt={product?.name}
                       width={80}
                       height={80}
                       className="w-full h-full object-cover"
@@ -216,7 +216,7 @@ const ProductDetails = ({ product, userId, reviews }) => {
                     {/* WhatsApp Button */}
         <div className="py-10">
               <a
-              href={`https://wa.me/1234567890?text=Hi, I am interested in ${product.name}`}
+              href={`https://wa.me/1234567890?text=Hi, I am interested in ${product?.name}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition text-sm sm:text-base"
