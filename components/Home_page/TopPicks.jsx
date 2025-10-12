@@ -1,3 +1,4 @@
+import { formatCurrency } from "@/lib/formatCurrency";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/model/Product";
 import Image from "next/image";
@@ -45,7 +46,7 @@ const TopPicks = async () => {
                      <h5 className='text-[16px] font-normal text-[#575757]'>{item.category.name}</h5> 
                     <h3 className="text-[24px] font-medium">{item.name}</h3>
                     <span className="text-[20px] font-medium mt-1 block">
-                      ${item.price}
+                      {formatCurrency(item.price)}
                     </span>
                   </div>
                 </Link>

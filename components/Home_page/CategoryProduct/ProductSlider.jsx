@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const ProductSlider = ({ products }) => {
   if (!products || products.length === 0) {
@@ -59,15 +60,15 @@ const ProductSlider = ({ products }) => {
                 {finalPrice !== product.price ? (
                   <div className="mt-2 flex items-center justify-center gap-5">
                     <h4 className="text-[18px] font-semibold text-red-600">
-                      ${finalPrice.toFixed(2)}
+                      {formatCurrency(Number(finalPrice.toFixed(2)))}
                     </h4>
                     <p className="text-[14px] text-gray-500 line-through">
-                      ${product.price}
+                      {formatCurrency(product.price)}
                     </p>
                   </div>
                 ) : (
                   <h4 className="text-[20px] font-semibold mt-2 text-amber-700">
-                    ${product.price}
+                    {formatCurrency(product.price)}
                   </h4>
                 )}
 
@@ -79,7 +80,7 @@ const ProductSlider = ({ products }) => {
                 )}
                 {product.discountType === "fixed" && (
                   <p className="text-[12px] text-green-600 mt-1">
-                    Save ${product.discount}
+                    Save {formatCurrency(product.discount)}
                   </p>
                 )}
 

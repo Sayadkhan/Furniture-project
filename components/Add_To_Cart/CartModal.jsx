@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
 import Link from "next/link";
 import { clearCart, removeFromCart } from "@/redux/slice/CartSlice";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const CartModal = ({ openCart, setOpenCart }) => {
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ const CartModal = ({ openCart, setOpenCart }) => {
                       </p>
                     )}
                     <p className="text-sm text-gray-700">
-                      {item.quantity} × ${item.price}
+                      {item.quantity} × {formatCurrency(item.price)}
                     </p>
                   </div>
 
@@ -93,7 +94,7 @@ const CartModal = ({ openCart, setOpenCart }) => {
           <div className="absolute bottom-0 left-0 right-0 border-t bg-white p-4">
             <div className="flex justify-between mb-3">
               <span className="font-medium">Total ({totalQuantity} items):</span>
-              <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+              <span className="font-semibold">{formatCurrency(totalPrice.toFixed(2))}</span>
             </div>
             <div className="flex gap-2">
               <button

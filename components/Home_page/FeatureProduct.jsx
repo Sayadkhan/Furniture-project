@@ -1,3 +1,4 @@
+import { formatCurrency } from '@/lib/formatCurrency'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
@@ -37,14 +38,15 @@ const FeatureProduct = ({ featuredProduct }) => {
                   {finalPrice !== Item.price ? (
                     <div className="mt-2 flex items-center justify-center gap-5">
                       <h4 className='text-[18px] font-semibold text-red-600'>
-                        ${finalPrice.toFixed(2)}
+                        {/* ${finalPrice.toFixed(2)} */}
+                        {formatCurrency(finalPrice)}
                       </h4>
                       <p className='text-[14px] text-gray-500 line-through'>
-                        ${Item.price}
+                        {formatCurrency(Item.price)}
                       </p>
                     </div>
                   ) : (
-                    <h4 className='text-[22px] font-semibold mt-2'>${Item.price}</h4>
+                    <h4 className='text-[22px] font-semibold mt-2'>{formatCurrency(Item.price)}</h4>
                   )}
                 <div className='text-center'>
   

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const ProductSection = ({ product }) => {
   const [visibleCount, setVisibleCount] = useState(10); // show 10 initially
@@ -79,15 +80,15 @@ const ProductSection = ({ product }) => {
                   {finalPrice !== Item.price ? (
                     <div className="mt-2 flex items-center justify-center gap-5">
                       <h4 className="text-[18px] font-semibold text-red-600">
-                        ${finalPrice.toFixed(2)}
+                        {formatCurrency(Number(finalPrice.toFixed(2)))}
                       </h4>
                       <p className="text-[14px] text-gray-500 line-through">
-                        ${Item.price}
+                        {formatCurrency(Item.price)}
                       </p>
                     </div>
                   ) : (
                     <h4 className="text-[22px] font-semibold mt-2">
-                      ${Item.price}
+                      {formatCurrency(Item.price)}
                     </h4>
                   )}
 
@@ -100,7 +101,7 @@ const ProductSection = ({ product }) => {
                     )}
                     {Item.discountType === "flat" && (
                       <p className="text-[14px] text-green-600 mt-1">
-                        Save ${Item.discount}
+                        Save {formatCurrency(Item.discount)}
                       </p>
                     )}
                   </div>

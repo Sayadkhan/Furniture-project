@@ -8,6 +8,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import Link from 'next/link';
 import Image from 'next/image';
+import { formatCurrency } from '@/lib/formatCurrency';
 
 const SliderProduct = ({products}) => {
 
@@ -47,7 +48,7 @@ const SliderProduct = ({products}) => {
               {/* Info (Bottom Slide Up) */}
               <div className="absolute bottom-0 left-0 w-full px-4 py-3 text-white translate-y-full group-hover:translate-y-0 transition-all duration-500">
                 <h3 className="text-lg font-semibold">{item.name}</h3>
-                <span className="text-sm font-medium">${item.price}</span>
+                <span className="text-sm font-medium">{formatCurrency(item.price)}</span>
               </div>
             </Link>
           </div>

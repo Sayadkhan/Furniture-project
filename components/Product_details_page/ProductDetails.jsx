@@ -6,6 +6,7 @@ import Image from "next/image";
 import ProductsTabs from "./ProductsTabs";
 import { toast } from "react-toastify";
 import { addToCart } from "@/redux/slice/CartSlice";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const ProductDetails = ({ product, userId, reviews }) => {
 
@@ -135,11 +136,11 @@ const ProductDetails = ({ product, userId, reviews }) => {
             {/* Price & Rating */}
             <div className="flex items-center gap-4 mt-3 flex-wrap">
               <span className="text-2xl sm:text-3xl font-semibold text-black">
-                ${discountedPrice}
+                {formatCurrency(discountedPrice)}
               </span>
               {product?.discount > 0 && (
                 <span className="line-through text-gray-400">
-                  ${activePrice}
+                  {formatCurrency(activePrice)}
                 </span>
               )}
            {product?.averageRating > 0 && (
@@ -202,7 +203,7 @@ const ProductDetails = ({ product, userId, reviews }) => {
                         {variant.attributes?.size}
                       </span>
                       <span className="text-gray-500 text-xs sm:text-sm ml-1 sm:ml-2">
-                        ${variant.price} | {variant.stock} left
+                        {formatCurrency(variant.price)} | {variant.stock} left
                       </span>
                     </button>
                   ))}

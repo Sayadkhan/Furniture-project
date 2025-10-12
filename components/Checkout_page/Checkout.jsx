@@ -8,6 +8,7 @@ import { clearCart } from "@/redux/slice/CartSlice";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaWhatsapp } from "react-icons/fa";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 const CheckoutPage = () => {
   const [form, setForm] = useState({
@@ -167,7 +168,7 @@ const CheckoutPage = () => {
           <div className="flex justify-between mb-1">
             <span className="text-gray-500">Total:</span>
             <span className="font-semibold text-green-600">
-              ${orderDetails.subtotal.toFixed(2)}
+              {formatCurrency(Number(orderDetails.total).toFixed(2))}
             </span>
           </div>
           <div className="flex justify-between">
@@ -208,7 +209,7 @@ const CheckoutPage = () => {
               <span>
                 {item.name} × {item.quantity}
               </span>
-              <span>${(item.price * item.quantity).toFixed(2)}</span>
+              <span>{formatCurrency(Number((item.price * item.quantity).toFixed(2)))}</span>
             </div>
           ))}
         </div>
@@ -351,12 +352,12 @@ const CheckoutPage = () => {
                       </p>
                     )}
                     <p className="text-sm text-gray-500">
-                      ${item.price} × {item.quantity}
+                      {formatCurrency(item.price)} × {item.quantity}
                     </p>
                   </div>
                 </div>
                 <span className="text-[15px] font-medium">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  {formatCurrency(Number((item.price * item.quantity).toFixed(2)))}
                 </span>
               </div>
             ))}
@@ -379,21 +380,21 @@ const CheckoutPage = () => {
           <div className="border-t mt-4 pt-4 space-y-2 text-[15px]">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{formatCurrency(Number(subtotal.toFixed(2)))}</span>
             </div>
             {discountAmount > 0 && (
               <div className="flex justify-between text-green-600 font-medium">
                 <span>Discount ({appliedCoupon?.code})</span>
-                <span>- ${discountAmount.toFixed(2)}</span>
+                <span>- {formatCurrency(Number(discountAmount.toFixed(2)))}</span>
               </div>
             )}
             <div className="flex justify-between">
               <span>Shipping</span>
-              <span>${shippingCost.toFixed(2)}</span>
+              <span>{formatCurrency(Number(shippingCost.toFixed(2)))}</span>
             </div>
             <div className="flex justify-between font-semibold text-[17px]">
               <span>Total</span>
-              <span>${grandTotal.toFixed(2)}</span>
+              <span>{formatCurrency(Number(grandTotal.toFixed(2)))}</span>
             </div>
           </div>
 
@@ -411,7 +412,7 @@ const CheckoutPage = () => {
                     checked={shipping === opt.id}
                     onChange={() => setShipping(opt.id)}
                   />
-                  {opt.label} {opt.price > 0 && <span className="ml-1">${opt.price}</span>}
+                  {opt.label} {opt.price > 0 && <span className="ml-1">{formatCurrency(opt.price)}</span>}
                 </label>
               ))}
             </div>
