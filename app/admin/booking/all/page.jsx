@@ -1,6 +1,8 @@
 import React, { Suspense } from 'react'
 import AllBooking from './components/AllBooking'
 
+export const dynamic = 'force-dynamic';
+
 const page = () => {
   return (
     <div>

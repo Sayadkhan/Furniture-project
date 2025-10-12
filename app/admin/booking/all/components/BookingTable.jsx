@@ -10,6 +10,8 @@ const BookingTable = ({ booking }) => {
   const [deleteBooking, setDeleteBooking] = useState(null);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
+  console.log(booking);
+
   // Toggle booking status
   const handleToggle = async (id, currentStatus) => {
     const newStatus = !currentStatus;

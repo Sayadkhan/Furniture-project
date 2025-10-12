@@ -2,6 +2,28 @@ import { connectDB } from "@/lib/mongodb";
 import Coupon from "@/model/Coupon";
 import Order from "@/model/Order";
 
+export async function GET(req) {
+  await connectDB();
+
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get("page")) || 1;
+  const limit = parseInt(searchParams.get("limit")) || 20;
+
+  const skip = (page - 1) * limit;
+
+  const [orders, total] = await Promise.all([
+    Order.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
+    Order.countDocuments(),
+  ]);
+
+  return Response.json({
+    orders,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  });
+}
+
 export async function POST(req) {
   try {
     await connectDB();
@@ -102,19 +124,6 @@ export async function POST(req) {
   } catch (error) {
     console.error("Order creation error:", error);
     return new Response(JSON.stringify({ error: "Error creating order" }), {
-      status: 500,
-    });
-  }
-}
-
-export async function GET() {
-  try {
-    await connectDB();
-    const orders = await Order.find().sort({ createdAt: -1 });
-    return new Response(JSON.stringify(orders), { status: 200 });
-  } catch (error) {
-    console.error("Fetch orders error:", error);
-    return new Response(JSON.stringify({ error: "Error fetching orders" }), {
       status: 500,
     });
   }

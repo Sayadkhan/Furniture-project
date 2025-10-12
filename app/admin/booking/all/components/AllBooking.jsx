@@ -22,6 +22,8 @@ export const dynamic = 'force-dynamic';
 const AllBooking = async () => {
 
   const booking = await getAllBooking()
+
+
   return (
     <div>
       <BookingTable booking={booking}/>

@@ -10,22 +10,43 @@ import SubCategory from "@/model/SubCategory";
 // import connectDB from "@/lib/db";
 // import Product from "@/models/Product";
 
-export async function GET() {
-  try {
-    await connectDB();
+export async function GET(req) {
+  await connectDB();
 
-    const products = await Product.find()
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get("page")) || 1;
+  const limit = parseInt(searchParams.get("limit")) || 10;
+  const search = searchParams.get("search") || "";
+  const category = searchParams.get("category") || "all";
+
+  const skip = (page - 1) * limit;
+  const query = {};
+
+  if (search) {
+    query.name = { $regex: search, $options: "i" };
+  }
+
+  if (category !== "all") {
+    query.category = category; // Use _id if category is ObjectId
+  }
+
+  const [products, total] = await Promise.all([
+    Product.find(query)
       .populate("category", "name")
       .populate("subcategory", "name")
-      .sort({ createdAt: -1 });
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 })
+      .lean(),
+    Product.countDocuments(query),
+  ]);
 
-    return NextResponse.json({ success: true, products });
-  } catch (err) {
-    return NextResponse.json(
-      { success: false, message: err.message },
-      { status: 500 }
-    );
-  }
+  return Response.json({
+    products,
+    total,
+    currentPage: page,
+    totalPages: Math.ceil(total / limit),
+  });
 }
 
 export async function POST(req) {
