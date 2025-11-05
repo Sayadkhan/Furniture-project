@@ -1,7 +1,8 @@
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 import React, { Suspense } from 'react'
 import ReviewPage from './components/ReviewPage'
 
-export const dynamic = 'force-dynamic';
 
 const page = () => {
   return (

@@ -11,7 +11,6 @@ async function getAllCategoryWithSub() {
 
   const categories = await Category.find({}).sort({ createdAt: -1 }).lean();
 
-  // fetch subcategories + childcategories for each category
   const categoriesWithSubAndChild = await Promise.all(
     categories.map(async (cat) => {
       const subcategories = await SubCategory.find({

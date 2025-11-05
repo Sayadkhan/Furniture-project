@@ -1,5 +1,9 @@
+
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 import React, { Suspense } from 'react'
 import ServerPage from './ServerPage'
+
 
 const page = () => {
   return (
