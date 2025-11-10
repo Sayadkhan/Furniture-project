@@ -11,7 +11,7 @@ import {
 import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const NavbarClient = ({ categories, curtains }) => {
+const NavbarClient = ({ categories, curtains, sofas }) => {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -78,6 +78,34 @@ const NavbarClient = ({ categories, curtains }) => {
               )}
             </div>
           )}
+          {sofas && (
+            <div className="relative group cursor-pointer">
+              <Link href={`/sofas`}>
+                <button className="text-[18px] font-medium hover:text-gray-800 transition flex items-center gap-1 capitalize cursor-pointer">
+                  {sofas.name || "Curtains"}
+                  <span className="text-sm">&#9662;</span>
+                </button>
+              </Link>
+
+              {sofas.subcategories?.length > 0 && (
+                <div className="absolute top-full left-0 mt-2 w-[250px] bg-[#6b3e2e] text-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                  <ul className="py-2">
+                    {sofas.subcategories.map((sub) => (
+                      <li key={sub._id}>
+                        <Link href={`/sofas/${sub._id}`}>
+                          <button className="w-full text-left px-4 py-2 text-[15px] hover:bg-[#8b5a3d] capitalize cursor-pointer">
+                            {sub.name}
+                          </button>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+
 
           {/* Other Categories */}
           {categories.slice(0, 5).map((cat) => (

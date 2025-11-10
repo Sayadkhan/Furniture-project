@@ -103,6 +103,11 @@ const sidebarLinks = [
         icon: ImageIcon,
         children: [{ href: "/admin/settings/logo/see", label: "Logo" }],
       },
+      {
+        label: "Whatsapp",
+        icon: ImageIcon,
+        children: [{ href: "/admin/whatsapp", label: "Whatsapp" }],
+      },
     ],
   },
 ];
