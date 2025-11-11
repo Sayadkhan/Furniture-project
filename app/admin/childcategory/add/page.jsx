@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react'
 import ChildCatAdd from './components/ChildCatAdd'
+export const dynamic = 'force-dynamic';
 
 const page = () => {
   return (

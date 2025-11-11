@@ -2,9 +2,20 @@ import { connectDB } from '@/lib/mongodb';
 import Product from '@/model/Product';
 import React from 'react'
 import SofasProduct from './SofasProduct';
+import SubCategory from '@/model/SubCategory';
 
 const SofasDetails = async ({id}) => {
   await connectDB();
+
+
+    const subCategoy = await SubCategory.findById(id).lean();
+  
+    const serializedSubCategory = JSON.parse(
+    JSON.stringify({
+      ...subCategoy,
+      _id: subCategoy._id.toString(),
+    })
+  );
 
   // Fetch products with populated category/subcategory
   const products = await Product.find({ subcategory: id })
@@ -12,13 +23,6 @@ const SofasDetails = async ({id}) => {
     .populate("subcategory", "name")
     .lean();
 
-  if (!products || products.length === 0) {
-    return (
-      <div className="py-10 text-center">
-        <p className="text-lg text-gray-500">No products found.</p>
-      </div>
-    );
-  }
 
   // Convert all ObjectIds to strings and make it fully JSON-safe
   const serializedProducts = JSON.parse(
@@ -47,7 +51,7 @@ const SofasDetails = async ({id}) => {
     <div>
       {/* <CurtainsProduct products={serializedProducts} /> */}
 
-      <SofasProduct products={serializedProducts} />
+      <SofasProduct products={serializedProducts} subCategoy={serializedSubCategory} />
     </div>
   );
 }

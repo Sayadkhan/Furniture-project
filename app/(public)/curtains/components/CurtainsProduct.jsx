@@ -20,7 +20,7 @@ import "swiper/css/zoom";
 import "swiper/css/effect-fade";
 import BookedSection from "@/components/Home_page/BookedSection/BookedSetion";
 
-const CurtainsProduct = ({ products }) => {
+const CurtainsProduct = ({ products, subCategoy }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const swiperRef = useRef(null);
 
@@ -62,7 +62,37 @@ const CurtainsProduct = ({ products }) => {
   return (
     <>
       <div className="container mx-auto">
-        {/* 🖼 Product Slider */}
+
+      <div
+        className="relative bg-cover bg-center h-64 flex flex-col items-center justify-center text-center"
+        style={{
+          backgroundImage: `url(${subCategoy.image})`,
+        }}
+      >
+        {/* Overlay dark shade for text visibility */}
+        <div className="absolute inset-0 bg-black/40" />
+
+        {/* Content */}
+        <div className="relative z-10">
+          <h2 className="text-4xl font-bold text-white capitalize">
+            {subCategoy.name}
+          </h2>
+
+          {subCategoy?.desc && (
+            <p className="text-white text-lg mt-2 max-w-2xl">
+              {subCategoy.desc}
+            </p>
+          )}
+        </div>
+      </div>
+
+
+        {/* Booked Section */}
+        <div>
+          <BookedSection />
+        </div>
+
+      {/* 🖼 Product Slider */}
         <div className="w-full px-4 py-8">
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
@@ -103,11 +133,6 @@ const CurtainsProduct = ({ products }) => {
               </SwiperSlide>
             ))}
           </Swiper>
-        </div>
-
-        {/* Booked Section */}
-        <div>
-          <BookedSection />
         </div>
 
  

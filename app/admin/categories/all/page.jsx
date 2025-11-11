@@ -5,6 +5,7 @@ import React, { Suspense } from 'react'
 import ServerPage from './ServerPage'
 
 
+
 const page = () => {
   return (
     <div>
