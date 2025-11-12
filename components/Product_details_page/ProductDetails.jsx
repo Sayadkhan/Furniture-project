@@ -7,8 +7,23 @@ import ProductsTabs from "./ProductsTabs";
 import { toast } from "react-toastify";
 import { addToCart } from "@/redux/slice/CartSlice";
 import { formatCurrency } from "@/lib/formatCurrency";
+import { useQuery } from "@tanstack/react-query";
 
 const ProductDetails = ({ product, userId, reviews }) => {
+
+      const { data, isLoading, isError } = useQuery({
+        queryKey: ["whatsapp-number"],
+        queryFn: async () => {
+          const res = await fetch("/api/whatsapp");
+          if (!res.ok) throw new Error("Failed to fetch");
+          return res.json();
+        },
+        staleTime: 5 * 60 * 1000,
+      });
+    
+      if (isLoading || isError || !data?.number) return null;
+    
+      const number = data.number; 
 
   const dispatch = useDispatch();
   const [numberCount, setNumberCount] = useState(1);
@@ -217,7 +232,7 @@ const ProductDetails = ({ product, userId, reviews }) => {
                {/* WhatsApp Button */}
         <div className="py-10">
               <a
-              href={`https://wa.me/1234567890?text=Hi, I am interested in ${product?.name}`}
+              href={`https://wa.me/${number}?text=Hi, I am interested in ${product?.name}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition text-sm sm:text-base"
