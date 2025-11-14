@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import Image from 'next/image'
-import { FaWhatsapp } from "react-icons/fa";
 import { useQuery } from '@tanstack/react-query'
 
 const ShopCard = ({ product }) => {
@@ -20,7 +19,6 @@ const ShopCard = ({ product }) => {
     });
   
     
-    // 🔥 Title substring (45 characters)
     const shortTitle = product.name?.length > 45
     ? product.name.substring(0, 45) + "..."
     : product.name;

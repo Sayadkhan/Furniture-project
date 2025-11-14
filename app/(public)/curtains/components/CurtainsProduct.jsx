@@ -19,6 +19,7 @@ import "swiper/css/pagination";
 import "swiper/css/zoom";
 import "swiper/css/effect-fade";
 import BookedSection from "@/components/Home_page/BookedSection/BookedSetion";
+import ShopCard from "@/components/Shop_Page/ShopCard";
 
 const CurtainsProduct = ({ products, subCategoy }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -92,49 +93,16 @@ const CurtainsProduct = ({ products, subCategoy }) => {
           <BookedSection />
         </div>
 
-      {/* 🖼 Product Slider */}
-        <div className="w-full px-4 py-8">
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1}
-            loop={true}
-            navigation
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 2500, disableOnInteraction: false }}
-            breakpoints={{
-              640: { slidesPerView: 2 },
-              768: { slidesPerView: 2 },
-              1024: { slidesPerView: 2 },
-            }}
-            className="mySwiper"
-          >
+       {/* 🖼 Product Slider */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 my-10">
+     
             {products?.map((product) => (
-              <SwiperSlide key={product._id}>
-                <div
-                  className="relative group w-full h-96 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer"
-                  onClick={() => openLightbox(product)}
-                >
-                  <Image
-                    src={product.images?.[0]}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  {product.images?.[1] && (
-                    <Image
-                      src={product.images[1]}
-                      alt={`${product.name} hover`}
-                      fill
-                      className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                    />
-                  )}
-                </div>
-              </SwiperSlide>
+              <div key={product._id}>
+                  <ShopCard product={product}/>    
+              </div>
             ))}
-          </Swiper>
+  
         </div>
-
  
       </div>
 
