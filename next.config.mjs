@@ -12,6 +12,7 @@ const nextConfig = {
       "randomuser.me",
       "res.cloudinary.com",
       "www.gravatar.com",
+      "via.placeholder.com",
     ],
   },
 };
